@@ -1,0 +1,514 @@
+{
+  "Xe": {
+    "status": "ok",
+    "files": [
+      {
+        "path": "/home/twotea/term9/oni/src/input/ionization_energies/xe.csv",
+        "kind": "ionization",
+        "unit": "eV",
+        "total_rows": 54,
+        "accepted_rows": 54,
+        "estimated_rows": 49,
+        "skipped": {},
+        "skipped_examples": {},
+        "warnings": [
+          "Есть значения в скобках NIST для зарядов [1, 2, 4, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53]; учти их неопределённость при интерпретации."
+        ]
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/xe_1.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 445,
+        "accepted_rows": 342,
+        "estimated_rows": 3,
+        "skipped": {
+          "ionization_limit": 2,
+          "above_bare_ionization_threshold": 101
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 344,
+              "values": {
+                "Configuration": "Xe II (5s2.5p5 2P*<3/2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "",
+                "Level (eV)": "12.1298437",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.0000015",
+                "Reference": "L12013,L9794,L6426"
+              }
+            },
+            {
+              "line": 396,
+              "values": {
+                "Configuration": "Xe II (5s2.5p5 2P*<1/2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "",
+                "Level (eV)": "13.436267",
+                "Suffix": "",
+                "Uncertainty (eV)": "",
+                "Reference": ""
+              }
+            }
+          ],
+          "above_bare_ionization_threshold": [
+            {
+              "line": 345,
+              "values": {
+                "Configuration": "5p5.(2P*<1/2>).7p",
+                "Term": "2[3/2]",
+                "J": "1",
+                "Prefix": "",
+                "Level (eV)": "12.25646",
+                "Suffix": "",
+                "Uncertainty (eV)": "",
+                "Reference": "L5272"
+              }
+            },
+            {
+              "line": 346,
+              "values": {
+                "Configuration": "5p5.(2P*<1/2>).7p",
+                "Term": "2[1/2]",
+                "J": "1",
+                "Prefix": "",
+                "Level (eV)": "12.28098",
+                "Suffix": "",
+                "Uncertainty (eV)": "",
+                "Reference": "L5272"
+              }
+            },
+            {
+              "line": 347,
+              "values": {
+                "Configuration": "5p5.(2P*<1/2>).7p",
+                "Term": "2[3/2]",
+                "J": "2",
+                "Prefix": "",
+                "Level (eV)": "12.28292",
+                "Suffix": "",
+                "Uncertainty (eV)": "",
+                "Reference": "L5272"
+              }
+            }
+          ]
+        },
+        "warnings": [
+          "Принято уровней с энергией в скобках NIST: 3; скобки не означают нулевую энергию."
+        ]
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/xe_2.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 164,
+        "accepted_rows": 161,
+        "estimated_rows": 0,
+        "skipped": {
+          "ionization_limit": 3
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 163,
+              "values": {
+                "Configuration": "Xe III (5s2.5p4 3P<2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "[",
+                "Level (eV)": "20.975",
+                "Suffix": "]",
+                "Uncertainty (eV)": "0.004",
+                "Reference": "L6925"
+              }
+            },
+            {
+              "line": 164,
+              "values": {
+                "Configuration": "Xe III (5s2.5p4 3P<0>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "",
+                "Level (eV)": "21.9830",
+                "Suffix": "",
+                "Uncertainty (eV)": "",
+                "Reference": ""
+              }
+            },
+            {
+              "line": 165,
+              "values": {
+                "Configuration": "Xe III (5s2.5p4 3P<1>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "",
+                "Level (eV)": "22.1893",
+                "Suffix": "",
+                "Uncertainty (eV)": "",
+                "Reference": ""
+              }
+            }
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/xe_3.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 158,
+        "accepted_rows": 157,
+        "estimated_rows": 0,
+        "skipped": {
+          "ionization_limit": 1
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 159,
+              "values": {
+                "Configuration": "Xe IV (5s2.5p3 4S<3/2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "[",
+                "Level (eV)": "31.05",
+                "Suffix": "]",
+                "Uncertainty (eV)": "0.04",
+                "Reference": "L4660,L10579"
+              }
+            }
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/xe_4.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 95,
+        "accepted_rows": 94,
+        "estimated_rows": 0,
+        "skipped": {
+          "ionization_limit": 1
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 96,
+              "values": {
+                "Configuration": "Xe V (5s2.5p2 3P<0>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "",
+                "Level (eV)": "42.20",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.20",
+                "Reference": "L8774"
+              }
+            }
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/xe_5.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 55,
+        "accepted_rows": 53,
+        "estimated_rows": 0,
+        "skipped": {
+          "ionization_limit": 2
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 55,
+              "values": {
+                "Configuration": "Xe VI (5s2.5p 2P<1/2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "[",
+                "Level (eV)": "54.1",
+                "Suffix": "]",
+                "Uncertainty (eV)": "0.5",
+                "Reference": "L11121"
+              }
+            },
+            {
+              "line": 56,
+              "values": {
+                "Configuration": "Xe VI (5s2.5p 2P*<3/2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "",
+                "Level (eV)": "56.0779",
+                "Suffix": "",
+                "Uncertainty (eV)": "",
+                "Reference": ""
+              }
+            }
+          ]
+        },
+        "warnings": []
+      }
+    ]
+  },
+  "Cs": {
+    "status": "ok",
+    "files": [
+      {
+        "path": "/home/twotea/term9/oni/src/input/ionization_energies/cs.csv",
+        "kind": "ionization",
+        "unit": "eV",
+        "total_rows": 55,
+        "accepted_rows": 55,
+        "estimated_rows": 52,
+        "skipped": {},
+        "skipped_examples": {},
+        "warnings": [
+          "Есть значения в скобках NIST для зарядов [2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54]; учти их неопределённость при интерпретации."
+        ]
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/cs_1.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 179,
+        "accepted_rows": 174,
+        "estimated_rows": 12,
+        "skipped": {
+          "ionization_limit": 1,
+          "above_bare_ionization_threshold": 4
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 176,
+              "values": {
+                "Configuration": "Cs II (5s2.5p6 1S<0>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "",
+                "Level (eV)": "3.89390572743",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.00000000017",
+                "Reference": "L19479"
+              }
+            }
+          ],
+          "above_bare_ionization_threshold": [
+            {
+              "line": 177,
+              "values": {
+                "Configuration": "5p5.6s2",
+                "Term": "2P*",
+                "J": "3/2",
+                "Prefix": "",
+                "Level (eV)": "12.307",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.004",
+                "Reference": "L15673"
+              }
+            },
+            {
+              "line": 178,
+              "values": {
+                "Configuration": "5p5.6s.(3P*).5d",
+                "Term": "4P*",
+                "J": "5/2",
+                "Prefix": "",
+                "Level (eV)": "13.1727",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.0004",
+                "Reference": ""
+              }
+            },
+            {
+              "line": 179,
+              "values": {
+                "Configuration": "5p5.6s2",
+                "Term": "2P*",
+                "J": "1/2",
+                "Prefix": "",
+                "Level (eV)": "13.5228",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.0022",
+                "Reference": "L15673"
+              }
+            }
+          ]
+        },
+        "warnings": [
+          "Принято уровней с энергией в скобках NIST: 12; скобки не означают нулевую энергию."
+        ]
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/cs_2.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 316,
+        "accepted_rows": 303,
+        "estimated_rows": 0,
+        "skipped": {
+          "ionization_limit": 1,
+          "above_bare_ionization_threshold": 12
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 305,
+              "values": {
+                "Configuration": "Cs III (5s2.5p5 2P*<3/2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "",
+                "Level (eV)": "23.15745",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.00006",
+                "Reference": "L6838"
+              }
+            }
+          ],
+          "above_bare_ionization_threshold": [
+            {
+              "line": 306,
+              "values": {
+                "Configuration": "5p5.(2P*<1/2>).8d",
+                "Term": "2[3/2]*",
+                "J": "1",
+                "Prefix": "",
+                "Level (eV)": "23.2062",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.0009",
+                "Reference": "L6802"
+              }
+            },
+            {
+              "line": 307,
+              "values": {
+                "Configuration": "5p5.(2P*<1/2>).10s",
+                "Term": "2[1/2]*",
+                "J": "1",
+                "Prefix": "",
+                "Level (eV)": "23.56729",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.00022",
+                "Reference": "L6802"
+              }
+            },
+            {
+              "line": 308,
+              "values": {
+                "Configuration": "5p5.(2P*<1/2>).9d",
+                "Term": "2[3/2]*",
+                "J": "1",
+                "Prefix": "",
+                "Level (eV)": "23.6697",
+                "Suffix": "",
+                "Uncertainty (eV)": "0.0009",
+                "Reference": "L6802"
+              }
+            }
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/cs_3.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 174,
+        "accepted_rows": 173,
+        "estimated_rows": 0,
+        "skipped": {
+          "ionization_limit": 1
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 175,
+              "values": {
+                "Configuration": "Cs IV (5s2.5p4 3P<2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "[",
+                "Level (eV)": "33.195",
+                "Suffix": "]",
+                "Uncertainty (eV)": "0.004",
+                "Reference": "L14869"
+              }
+            }
+          ]
+        },
+        "warnings": []
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/cs_4.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 116,
+        "accepted_rows": 115,
+        "estimated_rows": 23,
+        "skipped": {
+          "ionization_limit": 1
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 117,
+              "values": {
+                "Configuration": "Cs V (5s2.5p3 4S*<3/2>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "(",
+                "Level (eV)": "43.0",
+                "Suffix": ")",
+                "Uncertainty (eV)": "1.7",
+                "Reference": "L8672c99"
+              }
+            }
+          ]
+        },
+        "warnings": [
+          "Принято уровней с энергией в скобках NIST: 23; скобки не означают нулевую энергию."
+        ]
+      },
+      {
+        "path": "/home/twotea/term9/oni/src/input/energy_levels/cs_5.csv",
+        "kind": "levels",
+        "unit": "eV",
+        "total_rows": 50,
+        "accepted_rows": 49,
+        "estimated_rows": 2,
+        "skipped": {
+          "ionization_limit": 1
+        },
+        "skipped_examples": {
+          "ionization_limit": [
+            {
+              "line": 51,
+              "values": {
+                "Configuration": "Cs VI (5s2.5p2 3P<0>)",
+                "Term": "Limit",
+                "J": "---",
+                "Prefix": "(",
+                "Level (eV)": "56.0",
+                "Suffix": ")",
+                "Uncertainty (eV)": "1.9",
+                "Reference": "L8672c99"
+              }
+            }
+          ]
+        },
+        "warnings": [
+          "Принято уровней с энергией в скобках NIST: 2; скобки не означают нулевую энергию."
+        ]
+      }
+    ]
+  }
+}

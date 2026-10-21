@@ -1,0 +1,56 @@
+{
+  "settings": {
+    "input_dir": "/home/twotea/term9/oni/src/input",
+    "output_dir": "/home/twotea/term9/oni/src/results",
+    "elements": [
+      "Xe",
+      "Cs"
+    ],
+    "models": [
+      "ideal",
+      "nonideal"
+    ],
+    "pressure_pa": 100000.0,
+    "temperature_start_k": 3000.0,
+    "temperature_stop_k": 10000.0,
+    "temperature_step_k": 250.0,
+    "max_charge": 4,
+    "reference_density_m3": 1e+24,
+    "default_energy_unit": "eV",
+    "bound_levels_only": true,
+    "relative_tolerance": 1e-08,
+    "gamma_tolerance": 1e-12,
+    "max_iterations": 150,
+    "max_backtracks": 24,
+    "max_log_step": 2.0,
+    "continuation_depth": 4,
+    "minimum_temperature_step_k": 10.0,
+    "show_plots": false
+  },
+  "physical_model": "one-temperature; fixed finite bound-level tables; seminar frozen-correction Newton",
+  "density_unit": "m^-3",
+  "pressure_unit": "Pa",
+  "energy_unit_after_loading": "eV",
+  "failed_points": 0,
+  "loaded_levels": {
+    "Xe": [
+      342,
+      161,
+      157,
+      94,
+      53
+    ],
+    "Cs": [
+      174,
+      303,
+      173,
+      115,
+      49
+    ]
+  },
+  "notes": [
+    "Gamma=0 in ideal mode is a disabled correction, not a separate physical estimate.",
+    "Atomic-level cutoff does not depend on DeltaI in this version.",
+    "iterations counts the final point solve; continuation_steps counts intermediate temperatures."
+  ]
+}
