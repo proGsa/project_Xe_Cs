@@ -8,6 +8,9 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from dataclasses import replace
 from pathlib import Path
+from unittest.mock import patch
+
+import numpy as np
 
 from plasma.cli import main
 from plasma.output import solution_row
@@ -55,6 +58,43 @@ class ApplicationTests(unittest.TestCase):
         self.assertEqual(result.solutions, ())
         self.assertIsNone(result.csv_path)
         self.assertTrue(result.validation_path.is_file())
+
+    def test_grouped_plots_use_the_corresponding_csv_concentrations(self):
+        settings = replace(self.settings, elements=('Xe',), models=('ideal',), max_charge=4,
+                           temperature_stop_k=4000, plot_all_species=True)
+        write_input(settings.input_dir, max_charge=4)
+        figures = {}
+
+        def capture(figure, path, **kwargs):
+            ax = figure.axes[0]
+            self.assertEqual(ax.get_yscale(), 'log')
+            figures[Path(path).name] = {
+                line.get_label(): (line.get_xdata().copy(), line.get_ydata().copy(), line.get_color())
+                for line in ax.lines
+            }
+
+        with patch('matplotlib.figure.Figure.savefig', autospec=True, side_effect=capture):
+            result = run(settings, quiet=True)
+        with result.csv_path.open(encoding='utf-8-sig') as stream:
+            rows = list(csv.DictReader(stream))
+        expected = {
+            'Xe_ideal_group1_neutral_ion1_e.png': ('Xe, нейтралы', 'Xe, заряд +1', 'Электроны'),
+            'Xe_ideal_group2_ion1_e_ion2.png': ('Xe, заряд +1', 'Электроны', 'Xe, заряд +2'),
+            'Xe_ideal_group3_ion2_ion3.png': ('Xe, заряд +2', 'Xe, заряд +3'),
+            'Xe_ideal_group4_ion3_ion4.png': ('Xe, заряд +3', 'Xe, заряд +4'),
+            'Xe_ideal.png': ('Электроны', 'Xe, нейтралы', 'Xe, заряд +1', 'Xe, заряд +2',
+                             'Xe, заряд +3', 'Xe, заряд +4'),
+        }
+        self.assertEqual(set(figures), set(expected))
+        columns = {'Электроны': 'n_e_m3', 'Xe, нейтралы': 'n_0_m3',
+                   **{f'Xe, заряд +{z}': f'n_{z}_m3' for z in range(1, 5)}}
+        colors = {}
+        for filename, labels in expected.items():
+            self.assertEqual(tuple(figures[filename]), labels)
+            for label, (x, y, color) in figures[filename].items():
+                np.testing.assert_allclose(x, [float(r['T_K']) for r in rows])
+                np.testing.assert_allclose(y, [float(r[columns[label]]) for r in rows], rtol=1e-12)
+                self.assertEqual(color, colors.setdefault(label, color))
 
     def test_missing_csv_readable_cli_failure(self):
         stream = io.StringIO()

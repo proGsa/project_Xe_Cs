@@ -21,6 +21,10 @@ def main(settings: RunSettings | None = None, argv: list[str] | None = None) -> 
     parser.add_argument("--element", choices=("Xe", "Cs"), help="Рассчитать только один элемент.")
     parser.add_argument("--model", choices=("ideal", "nonideal"), help="Рассчитать только один режим.")
     parser.add_argument("--max-charge", type=int)
+    parser.add_argument("--plot-groups", type=int, nargs="+", choices=(1, 2, 3, 4),
+                        help="Группы графиков, например --plot-groups 1 3 4.")
+    parser.add_argument("--plot-all", action="store_true",
+                        help="Дополнительно сохранить общий график всех частиц.")
     parser.add_argument("--quiet", action="store_true", help="Не печатать промежуточные результаты и таблицу.")
     args = parser.parse_args(argv)
     updates = {}
@@ -32,6 +36,10 @@ def main(settings: RunSettings | None = None, argv: list[str] | None = None) -> 
         updates["elements"] = (args.element,)
     if args.model:
         updates["models"] = (args.model,)
+    if args.plot_groups is not None:
+        updates["plot_groups"] = tuple(args.plot_groups)
+    if args.plot_all:
+        updates["plot_all_species"] = True
     settings = replace(settings, **updates)
     try:
         summary = run(settings, validate_only=args.validate_only, quiet=args.quiet)

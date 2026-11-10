@@ -28,6 +28,8 @@ class RunSettings:
     continuation_depth: int = 4
     minimum_temperature_step_k: float = 10.0
     show_plots: bool = False
+    plot_groups: tuple[int, ...] = (1, 2, 3, 4)
+    plot_all_species: bool = False
 
     def validate(self) -> None:
         for name in (
@@ -58,6 +60,13 @@ class RunSettings:
                 raise ValueError(f"Некорректное значение {name}.")
         if self.relative_tolerance >= 1 or self.gamma_tolerance >= 1:
             raise ValueError("Допуски должны быть меньше единицы.")
+        if any(not isinstance(g, int) or isinstance(g, bool) or g not in (1, 2, 3, 4)
+               for g in self.plot_groups):
+            raise ValueError("plot_groups должен содержать номера групп от 1 до 4.")
+        if len(set(self.plot_groups)) != len(self.plot_groups):
+            raise ValueError("plot_groups содержит повторения.")
+        if not self.plot_all_species and not any(g <= self.max_charge for g in self.plot_groups):
+            raise ValueError("Нет доступных групп графиков: увеличь max_charge или выбери другую plot_groups.")
 
     def temperatures(self) -> np.ndarray:
         self.validate()

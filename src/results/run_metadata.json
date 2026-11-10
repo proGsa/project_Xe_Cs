@@ -12,7 +12,7 @@
     ],
     "pressure_pa": 100000.0,
     "temperature_start_k": 3000.0,
-    "temperature_stop_k": 10000.0,
+    "temperature_stop_k": 15000.0,
     "temperature_step_k": 250.0,
     "max_charge": 4,
     "reference_density_m3": 1e+24,
@@ -25,13 +25,21 @@
     "max_log_step": 2.0,
     "continuation_depth": 4,
     "minimum_temperature_step_k": 10.0,
-    "show_plots": false
+    "show_plots": false,
+    "plot_groups": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "plot_all_species": true
   },
   "physical_model": "one-temperature; fixed finite bound-level tables; seminar frozen-correction Newton",
   "density_unit": "m^-3",
   "pressure_unit": "Pa",
   "energy_unit_after_loading": "eV",
   "failed_points": 0,
+  "skipped_plot_groups": [],
   "loaded_levels": {
     "Xe": [
       342,

@@ -12,6 +12,16 @@ from .settings import RunSettings
 from .solver import Solution
 
 
+# Индексы столбцов density: электрон=0, нейтрал=1, заряд z -> z+1.
+_PLOT_GROUPS = {
+    1: ("group1_neutral_ion1_e", (1, 2, 0)),
+    2: ("group2_ion1_e_ion2", (2, 0, 3)),
+    3: ("group3_ion2_ion3", (3, 4)),
+    4: ("group4_ion3_ion4", (4, 5)),
+}
+_SPECIES_COLORS = ("tab:blue", "tab:orange", "tab:green", "tab:red", "tab:purple", "tab:brown")
+
+
 def solution_row(solution: Solution, settings: RunSettings) -> dict:
     row = {
         "element": solution.element, "model": solution.mode,
@@ -93,33 +103,41 @@ def plot_results(solutions: list[Solution], settings: RunSettings) -> list[Path]
             for i, solution in enumerate(selected):
                 if solution.converged and solution.state is not None:
                     density[i] = solution.state.density_star * settings.reference_density_m3
-            fig, ax = plt.subplots(figsize=(9, 5.5), constrained_layout=True)
             labels = ["Электроны", f"{element}, нейтралы"]
             labels += [f"{element}, заряд +{z}" for z in range(1, settings.max_charge + 1)]
-            for i, label in enumerate(labels):
-                ax.plot(
-                    temperature, density[:, i], marker=".", markersize=4, label=label,
-                    linestyle="--" if i == 0 else "-", linewidth=1.6,
-                    zorder=5 if i == 0 else 2,
-                )
-            ax.set_yscale("log")
-            ax.set_xlabel("Температура T, K")
-            ax.set_ylabel("Концентрация, м⁻³")
-            ax.set_title(f"{element}: {mode}; Tₑ = T; p = {settings.pressure_pa:g} Па")
-            ax.grid(True, which="both", alpha=0.25)
-            ax.legend()
-            failed = sum(not x.converged for x in selected)
-            if failed:
-                ax.text(0.02, 0.02, f"Несошедшиеся точки: {failed}; показаны пропусками",
-                        transform=ax.transAxes, fontsize=8)
-            if not np.isfinite(density).any():
-                ax.set_ylim(1, 10)
-                ax.text(0.5, 0.5, "Нет сошедшихся точек", ha="center", transform=ax.transAxes)
-            path = folder / f"{element}_{mode}.png"
-            fig.savefig(path, dpi=180)
-            paths.append(path)
-            if not settings.show_plots:
-                plt.close(fig)
+            specifications = [
+                (*_PLOT_GROUPS[g], f"группа {g}")
+                for g in settings.plot_groups if g <= settings.max_charge
+            ]
+            if settings.plot_all_species:
+                specifications.append(("", tuple(range(len(labels))), "все частицы"))
+            for suffix, indices, description in specifications:
+                fig, ax = plt.subplots(figsize=(9, 5.5), constrained_layout=True)
+                for i in indices:
+                    ax.plot(
+                        temperature, density[:, i], marker=".", markersize=4, label=labels[i],
+                        color=_SPECIES_COLORS[i], linestyle="--" if i == 0 else "-",
+                        linewidth=1.6, zorder=5 if i == 0 else 2,
+                    )
+                ax.set_yscale("log")
+                ax.set_xlabel("Температура T, K")
+                ax.set_ylabel("Концентрация, м⁻³")
+                ax.set_title(f"{element}: {mode}; {description}; Tₑ = T; p = {settings.pressure_pa:g} Па")
+                ax.grid(True, which="both", alpha=0.25)
+                ax.legend()
+                failed = sum(not x.converged for x in selected)
+                if failed:
+                    ax.text(0.02, 0.02, f"Несошедшиеся точки: {failed}; показаны пропусками",
+                            transform=ax.transAxes, fontsize=8)
+                if not np.isfinite(density[:, indices]).any():
+                    ax.set_ylim(1, 10)
+                    ax.text(0.5, 0.5, "Нет сошедшихся точек", ha="center", transform=ax.transAxes)
+                filename = f"{element}_{mode}" + (f"_{suffix}" if suffix else "") + ".png"
+                path = folder / filename
+                fig.savefig(path, dpi=180)
+                paths.append(path)
+                if not settings.show_plots:
+                    plt.close(fig)
     if settings.show_plots:
         plt.show()
         plt.close("all")
@@ -135,6 +153,7 @@ def write_metadata(settings: RunSettings, data: dict[str, AtomicData], failed: i
         "physical_model": "one-temperature; fixed finite bound-level tables; seminar frozen-correction Newton",
         "density_unit": "m^-3", "pressure_unit": "Pa", "energy_unit_after_loading": "eV",
         "failed_points": failed,
+        "skipped_plot_groups": [g for g in settings.plot_groups if g > settings.max_charge],
         "loaded_levels": {name: [len(x.energies_ev) for x in atom.levels] for name, atom in data.items()},
         "notes": [
             "Gamma=0 in ideal mode is a disabled correction, not a separate physical estimate.",

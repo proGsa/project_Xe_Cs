@@ -107,6 +107,9 @@ def run(settings: RunSettings, validate_only: bool = False, quiet: bool = False)
     atoms, validation = validate_inputs(settings)
     if not quiet:
         print("Модель: Tₑ = T; давление в Па; выходные концентрации в м⁻³.")
+        skipped_groups = [g for g in settings.plot_groups if g > settings.max_charge]
+        if skipped_groups:
+            print(f"Группы графиков {skipped_groups} пропущены: для них нужен больший max_charge.")
         for name, atom in atoms.items():
             print(f"{name}: уровней по зарядам: {[len(x.energies_ev) for x in atom.levels]}")
             for report in atom.reports:
