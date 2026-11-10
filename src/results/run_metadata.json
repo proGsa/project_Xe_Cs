@@ -12,7 +12,7 @@
     ],
     "pressure_pa": 100000.0,
     "temperature_start_k": 3000.0,
-    "temperature_stop_k": 15000.0,
+    "temperature_stop_k": 30000.0,
     "temperature_step_k": 250.0,
     "max_charge": 4,
     "reference_density_m3": 1e+24,

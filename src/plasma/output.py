@@ -120,6 +120,20 @@ def plot_results(solutions: list[Solution], settings: RunSettings) -> list[Path]
                         linewidth=1.6, zorder=5 if i == 0 else 2,
                     )
                 ax.set_yscale("log")
+                # Обрезка!!!
+                values = density[:, indices]
+                positive = values[np.isfinite(values) & (values > 0)]
+
+                if positive.size:
+                    lower = max(
+                        1e8,
+                        10.0 ** np.floor(np.log10(positive.min())),
+                    )
+                    upper = 10.0 ** np.ceil(
+                        np.log10(max(positive.max() * 1.1, lower * 10))
+                    )
+                    ax.set_ylim(lower, upper)
+
                 ax.set_xlabel("Температура T, K")
                 ax.set_ylabel("Концентрация, м⁻³")
                 ax.set_title(f"{element}: {mode}; {description}; Tₑ = T; p = {settings.pressure_pa:g} Па")
