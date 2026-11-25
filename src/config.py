@@ -11,6 +11,16 @@ SETTINGS = RunSettings(
     output_dir=BASE_DIR / "results",
     elements=("Xe", "Cs"),
     models=("ideal", "nonideal"),
+    sweep_mode="temperature",  # Прежняя прогонка: T_e=T_h=T.
+    # Для нового режима запускай: uv run main.py --two-temperature
+    # Или задай sweep_mode="temperature_ratio", models=("ideal",)
+    # и output_dir=BASE_DIR / "results_two_temperature".
+    heavy_temperature_k=4000.0,  # T_h фиксирована в двухтемпературной прогонке.
+    temperature_ratios=tuple(1.0 + 0.25 * i for i in range(17)),  # gamma: 1..5.
+    # Рост T_h при постоянном gamma: uv run main.py --fixed-gamma 2
+    # Для запуска без флага: sweep_mode="fixed_ratio", models=("ideal",),
+    # output_dir=BASE_DIR / "results_fixed_gamma_2".
+    fixed_temperature_ratio=2.0,  # Только для sweep_mode="fixed_ratio": T_e=gamma*T_h.
     pressure_pa=100_000.0,       # 1 бар; ввод всегда в Па.
     temperature_start_k=3000.0,
     temperature_stop_k=30000.0,
@@ -24,7 +34,7 @@ SETTINGS = RunSettings(
     max_iterations=150,
     max_backtracks=24,
     max_log_step=2.0,
-    continuation_depth=4,       # Дополнительные промежуточные температуры при сбое.
+    continuation_depth=4,       # Дополнительные промежуточные точки при сбое.
     minimum_temperature_step_k=10.0,
     show_plots=False,           # PNG сохраняются в любом случае.
     plot_groups=(1, 2, 3, 4),   # 1: 0,+1,e; 2: +1,e,+2; 3: +2,+3; 4: +3,+4.

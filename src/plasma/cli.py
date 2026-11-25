@@ -7,31 +7,65 @@ from pathlib import Path
 
 from .data import DataError
 from .runner import run
-from .settings import RunSettings
+from .settings import RunSettings, format_temperature_ratio
 
 
 def main(settings: RunSettings | None = None, argv: list[str] | None = None) -> int:
     if settings is None:
         from config import SETTINGS
         settings = SETTINGS
-    parser = argparse.ArgumentParser(description="Семинарский расчёт однотемпературной плазмы Xe и Cs.")
+    parser = argparse.ArgumentParser(description="Семинарский расчёт состава плазмы Xe и Cs при одной или двух температурах.")
     parser.add_argument("--validate-only", action="store_true", help="Проверить CSV без расчёта состава.")
     parser.add_argument("--input-dir", type=Path)
     parser.add_argument("--output-dir", type=Path)
     parser.add_argument("--element", choices=("Xe", "Cs"), help="Рассчитать только один элемент.")
     parser.add_argument("--model", choices=("ideal", "nonideal"), help="Рассчитать только один режим.")
     parser.add_argument("--max-charge", type=int)
+    sweep_options = parser.add_mutually_exclusive_group()
+    sweep_options.add_argument("--two-temperature", action="store_true",
+                               help="Идеальная прогонка по T_e/T_h при фиксированных p,T_h; отдельная папка результатов.")
+    sweep_options.add_argument("--fixed-gamma", type=float,
+                               help="Рост T_h при фиксированных gamma=T_e/T_h и p. При gamma!=1 только ideal.")
+    parser.add_argument("--heavy-temperature-k", type=float,
+                        help="Фиксированная T_h в K для двухтемпературного режима.")
+    parser.add_argument("--temperature-ratios", type=float, nargs="+",
+                        help="Возрастающая сетка gamma=T_e/T_h; точка 1 добавляется автоматически.")
+    parser.add_argument("--pressure-pa", type=float, help="Фиксированное давление в Па.")
+    parser.add_argument("--temperature-start-k", type=float, help="Начальная T_h в K для температурной прогонки.")
+    parser.add_argument("--temperature-stop-k", type=float, help="Конечная T_h в K для температурной прогонки.")
+    parser.add_argument("--temperature-step-k", type=float, help="Шаг T_h в K для температурной прогонки.")
     parser.add_argument("--plot-groups", type=int, nargs="+", choices=(1, 2, 3, 4),
                         help="Группы графиков, например --plot-groups 1 3 4.")
     parser.add_argument("--plot-all", action="store_true",
                         help="Дополнительно сохранить общий график всех частиц.")
     parser.add_argument("--quiet", action="store_true", help="Не печатать промежуточные результаты и таблицу.")
     args = parser.parse_args(argv)
+    if args.fixed_gamma is not None and (args.heavy_temperature_k is not None or args.temperature_ratios is not None):
+        parser.error("--fixed-gamma нельзя сочетать с --heavy-temperature-k или --temperature-ratios: "
+                     "в этом режиме растёт T_h, а отношение температур фиксировано.")
     updates = {}
-    for key in ("input_dir", "output_dir", "max_charge"):
+    for key in ("input_dir", "output_dir", "max_charge", "pressure_pa", "heavy_temperature_k",
+                "temperature_start_k", "temperature_stop_k", "temperature_step_k"):
         value = getattr(args, key)
         if value is not None:
             updates[key] = value
+    if args.two_temperature or args.heavy_temperature_k is not None or args.temperature_ratios is not None:
+        updates["sweep_mode"] = "temperature_ratio"
+        updates["models"] = ("ideal",)
+        if settings.sweep_mode != "temperature_ratio" and args.output_dir is None:
+            folder = Path(settings.output_dir)
+            updates["output_dir"] = folder.with_name(folder.name + "_two_temperature")
+    if args.temperature_ratios is not None:
+        updates["temperature_ratios"] = tuple(args.temperature_ratios)
+    if args.fixed_gamma is not None:
+        updates["sweep_mode"] = "fixed_ratio"
+        updates["fixed_temperature_ratio"] = args.fixed_gamma
+        if args.fixed_gamma != 1.0:
+            updates["models"] = ("ideal",)
+        if args.output_dir is None:
+            folder = Path(settings.output_dir)
+            label = format_temperature_ratio(args.fixed_gamma)
+            updates["output_dir"] = folder.with_name(folder.name + f"_fixed_gamma_{label}")
     if args.element:
         updates["elements"] = (args.element,)
     if args.model:

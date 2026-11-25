@@ -6,6 +6,11 @@ from pathlib import Path
 import numpy as np
 
 
+def format_temperature_ratio(ratio: float) -> str:
+    """Краткая запись без потери значащих цифр для подписей и имён файлов."""
+    return str(float(ratio)).removesuffix(".0")
+
+
 @dataclass(frozen=True)
 class RunSettings:
     input_dir: Path = field(default_factory=lambda: Path("input"))
@@ -30,12 +35,18 @@ class RunSettings:
     show_plots: bool = False
     plot_groups: tuple[int, ...] = (1, 2, 3, 4)
     plot_all_species: bool = False
+    sweep_mode: str = "temperature"  # temperature; temperature_ratio (T_h=const); fixed_ratio (gamma=const).
+    heavy_temperature_k: float = 4000.0
+    temperature_ratios: tuple[float, ...] = tuple(1.0 + 0.25 * i for i in range(17))
+    fixed_temperature_ratio: float = 2.0
 
     def validate(self) -> None:
         for name in (
             "pressure_pa", "temperature_start_k", "temperature_stop_k",
             "temperature_step_k", "reference_density_m3", "relative_tolerance",
             "gamma_tolerance", "max_log_step", "minimum_temperature_step_k",
+            "heavy_temperature_k",
+            "fixed_temperature_ratio",
         ):
             value = getattr(self, name)
             if not np.isfinite(value) or value <= 0:
@@ -54,6 +65,35 @@ class RunSettings:
             raise ValueError("models должен содержать ideal и/или nonideal.")
         if len(set(self.models)) != len(self.models):
             raise ValueError("models содержит повторения.")
+        if self.sweep_mode not in ("temperature", "temperature_ratio", "fixed_ratio"):
+            raise ValueError("sweep_mode должен быть temperature, temperature_ratio или fixed_ratio.")
+        if self.sweep_mode == "fixed_ratio":
+            if self.fixed_temperature_ratio != 1.0 and "nonideal" in self.models:
+                raise ValueError(
+                    "При фиксированном gamma != 1 поддерживается только models=('ideal',). "
+                    "Для nonideal при T_e != T_h формулы поправок ещё не заданы."
+                )
+            with np.errstate(over="ignore", under="ignore"):
+                endpoints = np.asarray([self.temperature_start_k, self.temperature_stop_k]) * self.fixed_temperature_ratio
+            if not np.all(np.isfinite(endpoints)) or np.any(endpoints <= 0):
+                raise ValueError("Произведение T_h * fixed_temperature_ratio вне диапазона температур float64.")
+        if self.sweep_mode == "temperature_ratio":
+            if self.models != ("ideal",):
+                raise ValueError(
+                    "Двухтемпературная прогонка поддерживает только models=('ideal',). "
+                    "Для nonideal при T_e != T_h формулы поправок ещё не заданы."
+                )
+            ratios = np.asarray(self.temperature_ratios, dtype=float)
+            if ratios.ndim != 1 or ratios.size == 0 or ratios.size > 100_000:
+                raise ValueError("temperature_ratios: требуется от 1 до 100000 значений.")
+            if not np.all(np.isfinite(ratios)) or np.any(ratios <= 0):
+                raise ValueError("temperature_ratios должны быть положительными конечными числами.")
+            if np.any(np.diff(ratios) <= 0):
+                raise ValueError("temperature_ratios должны строго возрастать без повторений.")
+            with np.errstate(over="ignore", under="ignore"):
+                electron_temperatures = ratios * self.heavy_temperature_k
+            if not np.all(np.isfinite(electron_temperatures)) or np.any(electron_temperatures <= 0):
+                raise ValueError("Произведение T_h * temperature_ratios вне диапазона температур float64.")
         for name in ("max_iterations", "max_backtracks", "continuation_depth"):
             value = getattr(self, name)
             if not isinstance(value, int) or isinstance(value, bool) or value < (0 if name == "continuation_depth" else 1):
@@ -78,3 +118,8 @@ class RunSettings:
         else:
             values[-1] = stop
         return values
+
+    def ratios(self) -> np.ndarray:
+        """Контрольная точка T_e/T_h=1 включается в вывод автоматически."""
+        self.validate()
+        return np.unique(np.r_[1.0, self.temperature_ratios])

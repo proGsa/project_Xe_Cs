@@ -1,4 +1,4 @@
-"""Однотемпературные формулы семинарского листочка в согласованных единицах."""
+"""Семинарская модель: однотемпературная и идеальная двухтемпературная."""
 
 from __future__ import annotations
 
@@ -39,13 +39,18 @@ class PhysicalConstants:
 @dataclass(frozen=True)
 class PreparedState:
     data: AtomicData
-    temperature_k: float
+    temperature_k: float  # T_h; прежнее имя сохранено для однотемпературного API.
     pressure_pa: float
     b_pressure: float
     charges: np.ndarray
     log_partitions: np.ndarray
     log_k_ideal: np.ndarray
     physical: PhysicalConstants
+    electron_temperature_k: float
+
+    @property
+    def temperature_ratio(self) -> float:
+        return self.electron_temperature_k / self.temperature_k
 
 
 @dataclass(frozen=True)
@@ -71,11 +76,17 @@ class Evaluation:
     errors: Errors
 
 
-def prepare_state(data: AtomicData, temperature_k: float, settings: RunSettings) -> PreparedState:
+def prepare_state(
+    data: AtomicData, temperature_k: float, settings: RunSettings,
+    *, electron_temperature_k: float | None = None,
+) -> PreparedState:
     if not np.isfinite(temperature_k) or temperature_k <= 0:
-        raise ValueError("Температура должна быть положительной и конечной.")
+        raise ValueError("Температура тяжёлых частиц должна быть положительной и конечной.")
+    te = float(temperature_k if electron_temperature_k is None else electron_temperature_k)
+    if not np.isfinite(te) or te <= 0:
+        raise ValueError("Температура электронов должна быть положительной и конечной.")
     physical = PhysicalConstants.create(settings.reference_density_m3)
-    thermal_ev = physical.kb_ev * temperature_k
+    thermal_ev = physical.kb_ev * te
     log_q = np.asarray([
         logsumexp(np.log(level.weights) - level.energies_ev / thermal_ev)
         for level in data.levels
@@ -83,24 +94,29 @@ def prepare_state(data: AtomicData, temperature_k: float, settings: RunSettings)
     if not np.all(np.isfinite(log_q)):
         raise ValueError("Некорректные статистические суммы.")
     log_k = (
-        np.log(2 * physical.a_star * temperature_k**1.5)
+        np.log(2 * physical.a_star * te**1.5)
         + np.diff(log_q) - data.ionization_ev[:data.max_charge] / thermal_ev
     )
     return PreparedState(
         data, float(temperature_k), float(settings.pressure_pa),
         settings.pressure_pa / (physical.kb * temperature_k * physical.reference_density_m3),
-        np.arange(len(data.levels), dtype=float), log_q, log_k, physical,
+        np.arange(len(data.levels), dtype=float), log_q, log_k, physical, te,
     )
 
 
 def analytic_initial_guess(prepared: PreparedState) -> np.ndarray:
     """Идеальные нейтрал/ион + логарифмическая рекурсия для старших зарядов.
 
-    u = B / (1 + sqrt(1+B/K)); все действия выполняются в логарифмах.
+    u = 2B / (1+gamma + sqrt((1+gamma)^2 + 4B/K*)), gamma=T_e/T_h.
+    При gamma=1 получается прежнее u = B / (1 + sqrt(1+B/K*)).
+    Все действия выполняются в логарифмах.
     """
     log_b = np.log(prepared.b_pressure)
     log_k0 = prepared.log_k_ideal[0]
-    log_u = log_b - np.logaddexp(0.0, 0.5 * np.logaddexp(0.0, log_b - log_k0))
+    log_half_factor = np.log((1.0 + prepared.temperature_ratio) / 2)
+    log_u = log_b - np.logaddexp(
+        log_half_factor, 0.5 * np.logaddexp(2 * log_half_factor, log_b - log_k0),
+    )
     y = np.empty(len(prepared.charges) + 1)
     y[0] = log_u
     y[1] = 2 * log_u - log_k0
@@ -113,6 +129,8 @@ def solve_gamma(
     prepared: PreparedState, density_star: np.ndarray, tolerance: float,
 ) -> tuple[float, float]:
     """Половинное деление по q=Gamma/Gamma_D на [0,1]."""
+    if prepared.electron_temperature_k != prepared.temperature_k:
+        raise ValueError("Уравнение Gamma задано только для T_e=T_h.")
     ae, ions = density_star[0], density_star[1:]
     z2 = prepared.charges**2
     weighted = z2 * ions
@@ -179,7 +197,8 @@ def evaluate_state(
         errors = Errors(
             float(np.max(np.abs(y[0] + y[2:] - y[1:-1] - log_k))),
             abs(ae - charge) / (ae + charge),
-            abs(float(np.sum(density)) - alpha - prepared.b_pressure) / prepared.b_pressure,
+            abs(prepared.temperature_ratio * ae + float(np.sum(ions))
+                - alpha - prepared.b_pressure) / prepared.b_pressure,
             gamma_error,
         )
     if not all(np.isfinite(x) for x in (alpha, gamma, errors.maximum, errors.gamma)):
@@ -209,10 +228,11 @@ def assemble_system(
     matrix[-2, 0] = ae
     matrix[-2, 1:] = -charged
     rhs[-2] = ae * (y[0] - 1) - np.sum(charged * (y[1:] - 1))
-    matrix[-1, 0] = ae
+    electron_pressure = prepared.temperature_ratio * ae
+    matrix[-1, 0] = electron_pressure
     matrix[-1, 1:] = ions
     rhs[-1] = (
-        prepared.b_pressure + evaluation.alpha + ae * (y[0] - 1)
+        prepared.b_pressure + evaluation.alpha + electron_pressure * (y[0] - 1)
         + np.sum(ions * (y[1:] - 1))
     )
     if scale_rows:

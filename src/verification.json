@@ -1,0 +1,64 @@
+{
+  "version": "0.3.0",
+  "tests_passed": 60,
+  "one_temperature_points": 436,
+  "one_temperature_failures": 0,
+  "max_relative_difference_from_original_one_temperature_program": 1.835059878435983e-16,
+  "two_temperature_points": 34,
+  "two_temperature_failures": 0,
+  "conditions": {
+    "pressure_pa": 100000,
+    "heavy_temperature_k": 4000,
+    "gamma_min": 1,
+    "gamma_max": 5,
+    "gamma_step": 0.25,
+    "max_charge": 4
+  },
+  "gamma_one_max_relative_difference_from_original": 3.470424420523744e-10,
+  "two_temperature_max_pressure_error_recomputed_from_csv": 9.580059413565323e-09,
+  "two_temperature_max_charge_error_recomputed_from_csv": 9.923071058920259e-10,
+  "same_Te_reconstructed_pressure_check": {
+    "Xe": {
+      "pressure_pa": 50949.32224214937,
+      "max_relative_density_difference": 1.431660487741479e-14
+    },
+    "Cs": {
+      "pressure_pa": 72129.12835261249,
+      "max_relative_density_difference": 2.6527411140405044e-10
+    }
+  },
+  "two_temperature_plots": 10,
+  "fixed_ratio_temperature_sweep": {
+    "gamma_one": {
+      "points": 436,
+      "failed": 0,
+      "models": [
+        "ideal",
+        "nonideal"
+      ],
+      "max_relative_difference_from_previous_temperature_sweep": 0.0,
+      "plots": 20
+    },
+    "gamma_two": {
+      "points": 218,
+      "failed": 0,
+      "models": [
+        "ideal"
+      ],
+      "pressure_pa": 100000.0,
+      "Th_min_K": 3000,
+      "Th_max_K": 30000,
+      "Th_step_K": 250,
+      "Te_min_K": 6000,
+      "Te_max_K": 60000,
+      "max_pressure_error_recomputed_from_csv": 9.120218746829778e-09,
+      "max_charge_error_recomputed_from_csv": 9.039014081641812e-09,
+      "max_saha_log_error_recomputed_from_csv": 1.4210854715202004e-14,
+      "plots": 10
+    },
+    "fixed_heavy_temperature_regression": {
+      "points": 34,
+      "failed": 0
+    }
+  }
+}

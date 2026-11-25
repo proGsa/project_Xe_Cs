@@ -48,18 +48,29 @@ def validate_inputs(settings: RunSettings) -> tuple[dict[str, AtomicData], Path]
 def _continue_to(
     atom: AtomicData, previous: Solution, target_t: float, mode: str,
     settings: RunSettings, depth: int = 0,
+    *, electron_temperature_k: float | None = None,
 ) -> Solution:
     assert previous.state is not None and previous.converged
-    prepared = prepare_state(atom, target_t, settings)
+    target_te = target_t if electron_temperature_k is None else electron_temperature_k
+    prepared = prepare_state(atom, target_t, settings, electron_temperature_k=target_te)
     target = solve_state(prepared, settings, mode, previous.state.y)
-    gap = abs(target_t - previous.temperature_k)
+    previous_te = (previous.temperature_k if previous.electron_temperature_k is None
+                   else previous.electron_temperature_k)
+    gap = max(abs(target_t - previous.temperature_k), abs(target_te - previous_te))
     if target.converged or depth >= settings.continuation_depth or gap / 2 < settings.minimum_temperature_step_k:
         return target
     middle_t = (previous.temperature_k + target_t) / 2
-    middle = _continue_to(atom, previous, middle_t, mode, settings, depth + 1)
+    middle_te = (previous_te + target_te) / 2
+    middle = _continue_to(
+        atom, previous, middle_t, mode, settings, depth + 1,
+        electron_temperature_k=middle_te,
+    )
     if not middle.converged:
         return target
-    retry = _continue_to(atom, middle, target_t, mode, settings, depth + 1)
+    retry = _continue_to(
+        atom, middle, target_t, mode, settings, depth + 1,
+        electron_temperature_k=target_te,
+    )
     return replace(retry, continuation_steps=middle.continuation_steps + retry.continuation_steps + 1)
 
 
@@ -67,13 +78,17 @@ def temperature_sweep(
     data: dict[str, AtomicData], settings: RunSettings,
     progress: Callable[[str], None] | None = None,
 ) -> list[Solution]:
+    """Рост T_h при gamma=1 либо при заданном постоянном T_e/T_h."""
     solutions = []
     temperatures = settings.temperatures()
+    fixed_ratio = settings.sweep_mode == "fixed_ratio"
+    ratio = settings.fixed_temperature_ratio if fixed_ratio else 1.0
     for element in settings.elements:
         atom = data[element]
         previous: dict[str, Solution] = {}
         for temperature in temperatures:
-            prepared = prepare_state(atom, float(temperature), settings)
+            te = float(ratio * temperature)
+            prepared = prepare_state(atom, float(temperature), settings, electron_temperature_k=te)
             ideal_here = None
             for mode in ("ideal", "nonideal"):
                 selected = mode in settings.models
@@ -81,7 +96,10 @@ def temperature_sweep(
                 if not selected and not warmup:
                     continue
                 if mode in previous:
-                    solution = _continue_to(atom, previous[mode], float(temperature), mode, settings)
+                    solution = _continue_to(
+                        atom, previous[mode], float(temperature), mode, settings,
+                        electron_temperature_k=te,
+                    )
                 else:
                     seed = ideal_here.state.y if mode == "nonideal" and ideal_here is not None and ideal_here.converged else None
                     solution = solve_state(prepared, settings, mode, seed)
@@ -97,16 +115,64 @@ def temperature_sweep(
                     solutions.append(solution)
                     if progress:
                         error = solution.state.errors.maximum if solution.state is not None else float("inf")
-                        progress(f"{element:2} {mode:8} T={temperature:8.2f} K: "
+                        condition = (f"T_h={temperature:8.2f} K, T_e={te:8.2f} K, gamma={ratio:g}"
+                                     if fixed_ratio else f"T={temperature:8.2f} K")
+                        progress(f"{element:2} {mode:8} {condition}: "
                                  f"{'ok' if solution.converged else 'FAILED'}, "
                                  f"итераций={solution.iterations}, ошибка={error:.3e}")
+    return solutions
+
+
+def temperature_ratio_sweep(
+    data: dict[str, AtomicData], settings: RunSettings,
+    progress: Callable[[str], None] | None = None,
+) -> list[Solution]:
+    """Фиксированные p,T_h; базовое решение при gamma=1, затем протяжка по gamma."""
+    settings.validate()
+    if settings.sweep_mode != "temperature_ratio":
+        raise ValueError("Для прогонки отношения температур требуется sweep_mode='temperature_ratio'.")
+    solutions = []
+    ratios = settings.ratios()
+    th = float(settings.heavy_temperature_k)
+    for element in settings.elements:
+        atom = data[element]
+        baseline = solve_state(prepare_state(atom, th, settings), settings, "ideal")
+        previous = baseline if baseline.converged else None
+        for ratio in ratios:
+            te = float(ratio * th)
+            if ratio == 1.0:
+                solution = baseline
+            elif previous is not None:
+                solution = _continue_to(
+                    atom, previous, th, "ideal", settings, electron_temperature_k=te,
+                )
+            else:
+                solution = solve_state(
+                    prepare_state(atom, th, settings, electron_temperature_k=te),
+                    settings, "ideal",
+                )
+            if solution.converged:
+                previous = solution
+            solutions.append(solution)
+            if progress:
+                error = solution.state.errors.maximum if solution.state is not None else float("inf")
+                progress(f"{element:2} ideal T_h={th:g} K, T_e={te:g} K, "
+                         f"gamma={ratio:g}: {'ok' if solution.converged else 'FAILED'}, "
+                         f"итераций={solution.iterations}, ошибка={error:.3e}")
     return solutions
 
 
 def run(settings: RunSettings, validate_only: bool = False, quiet: bool = False) -> RunSummary:
     atoms, validation = validate_inputs(settings)
     if not quiet:
-        print("Модель: Tₑ = T; давление в Па; выходные концентрации в м⁻³.")
+        if settings.sweep_mode == "temperature_ratio":
+            print(f"Идеальная двухтемпературная модель: T_h={settings.heavy_temperature_k:g} K, "
+                  f"p={settings.pressure_pa:g} Па; прогонка по gamma=T_e/T_h; концентрации в м⁻³.")
+        elif settings.sweep_mode == "fixed_ratio":
+            print(f"Прогонка по T_h: gamma=T_e/T_h={settings.fixed_temperature_ratio:g} фиксирована, "
+                  f"T_e=gamma*T_h, p={settings.pressure_pa:g} Па; концентрации в м⁻³.")
+        else:
+            print("Модель: Tₑ = T_h = T; давление в Па; выходные концентрации в м⁻³.")
         skipped_groups = [g for g in settings.plot_groups if g > settings.max_charge]
         if skipped_groups:
             print(f"Группы графиков {skipped_groups} пропущены: для них нужен больший max_charge.")
@@ -118,7 +184,8 @@ def run(settings: RunSettings, validate_only: bool = False, quiet: bool = False)
         print(f"Отчёт входных данных: {validation}")
     if validate_only:
         return RunSummary((), validation)
-    solutions = temperature_sweep(atoms, settings, None if quiet else print)
+    sweep = temperature_ratio_sweep if settings.sweep_mode == "temperature_ratio" else temperature_sweep
+    solutions = sweep(atoms, settings, None if quiet else print)
     csv_path = write_csv(solutions, settings)
     plots = plot_results(solutions, settings)
     metadata = write_metadata(settings, atoms, sum(not x.converged for x in solutions))
@@ -129,5 +196,6 @@ def run(settings: RunSettings, validate_only: bool = False, quiet: bool = False)
         print(f"Графики: {Path(settings.output_dir) / 'plots'}")
         for solution in solutions:
             if not solution.converged:
-                print(f"Не сошлось: {solution.element}, {solution.mode}, {solution.temperature_k:g} K: {solution.message}")
+                print(f"Не сошлось: {solution.element}, {solution.mode}, "
+                      f"T_h={solution.temperature_k:g} K, gamma={solution.temperature_ratio:g}: {solution.message}")
     return RunSummary(tuple(solutions), validation, csv_path, tuple(plots), metadata)

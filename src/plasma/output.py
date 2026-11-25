@@ -8,7 +8,7 @@ from pathlib import Path
 import numpy as np
 
 from .data import AtomicData
-from .settings import RunSettings
+from .settings import RunSettings, format_temperature_ratio
 from .solver import Solution
 
 
@@ -26,6 +26,10 @@ def solution_row(solution: Solution, settings: RunSettings) -> dict:
     row = {
         "element": solution.element, "model": solution.mode,
         "T_K": solution.temperature_k, "p_Pa": solution.pressure_pa,
+        "T_h_K": solution.temperature_k,
+        "T_e_K": (solution.temperature_k if solution.electron_temperature_k is None
+                  else solution.electron_temperature_k),
+        "gamma_Te_Th": solution.temperature_ratio,
         "Z_max": settings.max_charge,
         "n_e_m3": "",
         **{f"n_{z}_m3": "" for z in range(settings.max_charge + 1)},
@@ -63,7 +67,7 @@ def write_csv(solutions: list[Solution], settings: RunSettings) -> Path:
 
 
 def print_table(solutions: list[Solution], settings: RunSettings) -> None:
-    columns = ["element", "model", "T_K", "p_Pa", "Z_max", "n_e_m3"]
+    columns = ["element", "model", "T_h_K", "T_e_K", "gamma_Te_Th", "p_Pa", "Z_max", "n_e_m3"]
     columns += [f"n_{z}_m3" for z in range(settings.max_charge + 1)]
     columns += ["Gamma", "iterations", "status"]
 
@@ -97,7 +101,14 @@ def plot_results(solutions: list[Solution], settings: RunSettings) -> list[Path]
             )
             if not selected:
                 continue
-            temperature = np.asarray([x.temperature_k for x in selected])
+            ratio_sweep = settings.sweep_mode == "temperature_ratio"
+            fixed_ratio = settings.sweep_mode == "fixed_ratio"
+            ratio_label = format_temperature_ratio(settings.fixed_temperature_ratio)
+            if ratio_sweep:
+                selected.sort(key=lambda x: x.temperature_ratio)
+            abscissa = np.asarray([
+                x.temperature_ratio if ratio_sweep else x.temperature_k for x in selected
+            ])
             # NaN прерывает кривую в несошедшейся точке.
             density = np.full((len(selected), settings.max_charge + 2), np.nan)
             for i, solution in enumerate(selected):
@@ -115,7 +126,7 @@ def plot_results(solutions: list[Solution], settings: RunSettings) -> list[Path]
                 fig, ax = plt.subplots(figsize=(9, 5.5), constrained_layout=True)
                 for i in indices:
                     ax.plot(
-                        temperature, density[:, i], marker=".", markersize=4, label=labels[i],
+                        abscissa, density[:, i], marker=".", markersize=4, label=labels[i],
                         color=_SPECIES_COLORS[i], linestyle="--" if i == 0 else "-",
                         linewidth=1.6, zorder=5 if i == 0 else 2,
                     )
@@ -126,17 +137,24 @@ def plot_results(solutions: list[Solution], settings: RunSettings) -> list[Path]
 
                 if positive.size:
                     lower = max(
-                        1e8,
+                        1e16,
                         10.0 ** np.floor(np.log10(positive.min())),
                     )
                     upper = 10.0 ** np.ceil(
                         np.log10(max(positive.max() * 1.1, lower * 10))
                     )
                     ax.set_ylim(lower, upper)
+                    if positive.max() < lower:
+                        ax.text(0.02, 0.95, f"Все концентрации ниже {lower:.0e} м⁻³",
+                                va="top", transform=ax.transAxes, fontsize=9)
 
-                ax.set_xlabel("Температура T, K")
+                xlabel = ("Отношение температур γ = Tₑ/Tₕ" if ratio_sweep else
+                          "Температура тяжёлых частиц Tₕ, K" if fixed_ratio else "Температура T, K")
+                ax.set_xlabel(xlabel)
                 ax.set_ylabel("Концентрация, м⁻³")
-                ax.set_title(f"{element}: {mode}; {description}; Tₑ = T; p = {settings.pressure_pa:g} Па")
+                condition = (f"Tₕ = {settings.heavy_temperature_k:g} K" if ratio_sweep else
+                             f"γ = {ratio_label}; Tₑ = γTₕ" if fixed_ratio else "Tₑ = Tₕ = T")
+                ax.set_title(f"{element}: {mode}; {description}; {condition}; p = {settings.pressure_pa:g} Па")
                 ax.grid(True, which="both", alpha=0.25)
                 ax.legend()
                 failed = sum(not x.converged for x in selected)
@@ -146,7 +164,10 @@ def plot_results(solutions: list[Solution], settings: RunSettings) -> list[Path]
                 if not np.isfinite(density[:, indices]).any():
                     ax.set_ylim(1, 10)
                     ax.text(0.5, 0.5, "Нет сошедшихся точек", ha="center", transform=ax.transAxes)
-                filename = f"{element}_{mode}" + (f"_{suffix}" if suffix else "") + ".png"
+                prefix = f"{element}_{mode}" + ("_two_temperature" if ratio_sweep else "")
+                if fixed_ratio:
+                    prefix += f"_fixed_gamma_{ratio_label}"
+                filename = prefix + (f"_{suffix}" if suffix else "") + ".png"
                 path = folder / filename
                 fig.savefig(path, dpi=180)
                 paths.append(path)
@@ -162,17 +183,37 @@ def write_metadata(settings: RunSettings, data: dict[str, AtomicData], failed: i
     values = asdict(settings)
     values["input_dir"] = str(Path(settings.input_dir).resolve())
     values["output_dir"] = str(Path(settings.output_dir).resolve())
+    if settings.sweep_mode == "temperature_ratio":
+        physical_model = (
+            "two-temperature ideal; Saha and electronic excitation at T_e; fixed p,T_h; "
+            "fixed finite bound-level tables; seminar Newton"
+        )
+    elif settings.sweep_mode == "fixed_ratio":
+        physical_model = (
+            "temperature sweep at fixed p and T_e/T_h; Saha and electronic excitation at T_e; "
+            "nonideal corrections allowed only for T_e=T_h; fixed finite bound-level tables; seminar Newton"
+        )
+    else:
+        physical_model = "one-temperature; fixed finite bound-level tables; seminar frozen-correction Newton"
     payload = {
         "settings": values,
-        "physical_model": "one-temperature; fixed finite bound-level tables; seminar frozen-correction Newton",
+        "physical_model": physical_model,
         "density_unit": "m^-3", "pressure_unit": "Pa", "energy_unit_after_loading": "eV",
+        "temperature_unit": "K", "T_K_alias": "T_h_K",
+        "sweep_variable": ("gamma_Te_Th" if settings.sweep_mode == "temperature_ratio" else
+                           "T_h_K" if settings.sweep_mode == "fixed_ratio" else "T_K"),
+        "temperature_ratio_grid": settings.ratios().tolist() if settings.sweep_mode == "temperature_ratio" else None,
+        "fixed_temperature_ratio": settings.fixed_temperature_ratio if settings.sweep_mode == "fixed_ratio" else None,
         "failed_points": failed,
         "skipped_plot_groups": [g for g in settings.plot_groups if g > settings.max_charge],
         "loaded_levels": {name: [len(x.energies_ev) for x in atom.levels] for name, atom in data.items()},
         "notes": [
             "Gamma=0 in ideal mode is a disabled correction, not a separate physical estimate.",
+            "gamma_Te_Th is T_e/T_h; Gamma is a distinct nonideality correction parameter.",
+            "For T_e != T_h only ideal mode is implemented; nonideal corrections require T_e=T_h.",
+            "Both temperatures are prescribed; no time-dependent temperature or energy evolution is solved.",
             "Atomic-level cutoff does not depend on DeltaI in this version.",
-            "iterations counts the final point solve; continuation_steps counts intermediate temperatures.",
+            "iterations counts the final point solve; continuation_steps counts intermediate states.",
         ],
     }
     path = Path(settings.output_dir) / "run_metadata.json"

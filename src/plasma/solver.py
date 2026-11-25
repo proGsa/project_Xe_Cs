@@ -13,7 +13,7 @@ from .settings import RunSettings
 
 @dataclass(frozen=True)
 class Solution:
-    temperature_k: float
+    temperature_k: float  # T_h; T_K в прежнем формате CSV.
     pressure_pa: float
     element: str
     mode: str
@@ -22,6 +22,12 @@ class Solution:
     state: Evaluation | None
     message: str
     continuation_steps: int = 0
+    electron_temperature_k: float | None = None
+
+    @property
+    def temperature_ratio(self) -> float:
+        te = self.temperature_k if self.electron_temperature_k is None else self.electron_temperature_k
+        return te / self.temperature_k
 
 
 def solve_state(
@@ -35,6 +41,7 @@ def solve_state(
         return Solution(
             prepared.temperature_k, prepared.pressure_pa, prepared.data.element,
             mode, ok, iterations, current, message,
+            electron_temperature_k=prepared.electron_temperature_k,
         )
 
     try:
@@ -72,6 +79,6 @@ def solve_state(
                 break
             eta /= 2
         if accepted is None:
-            return result(False, iteration + 1, "Не найден уменьшающий ошибки шаг; попробуй меньший шаг температуры или другое приближение.")
+            return result(False, iteration + 1, "Не найден уменьшающий ошибки шаг; попробуй меньший шаг прогонки или другое приближение.")
         current = accepted
     return result(False, settings.max_iterations, "Достигнут предел итераций.")
