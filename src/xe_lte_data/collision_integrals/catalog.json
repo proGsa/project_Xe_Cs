@@ -1,0 +1,122 @@
+{
+  "non_coulomb": {
+    "Xe0_Xe0_traditional.csv": {
+      "source_file": "raw/mdpi/Collision Integrals/CiXenon/Traditional/CI_Xe_Xe.csv",
+      "rows": 298,
+      "temperature_min_K": 300.0,
+      "temperature_max_K": 30000.0,
+      "quantity": "pi*Omega^(l,s), area; not collision-frequency integral",
+      "unit": "m^2"
+    },
+    "Xe0_Xe1_traditional.csv": {
+      "source_file": "raw/mdpi/Collision Integrals/CiXenon/Traditional/CI_Xe_Xe+.csv",
+      "rows": 298,
+      "temperature_min_K": 300.0,
+      "temperature_max_K": 30000.0,
+      "quantity": "pi*Omega^(l,s), area; not collision-frequency integral",
+      "unit": "m^2"
+    },
+    "Xe0_Xe0_phenomenological.csv": {
+      "source_file": "raw/mdpi/Collision Integrals/CiXenon/Phenomenological/CI_Xe_Xe.csv",
+      "rows": 298,
+      "temperature_min_K": 300.0,
+      "temperature_max_K": 30000.0,
+      "quantity": "pi*Omega^(l,s), area; not collision-frequency integral",
+      "unit": "m^2"
+    },
+    "Xe0_Xe1_phenomenological.csv": {
+      "source_file": "raw/mdpi/Collision Integrals/CiXenon/Phenomenological/CI_Xe_Xe+.csv",
+      "rows": 298,
+      "temperature_min_K": 300.0,
+      "temperature_max_K": 30000.0,
+      "quantity": "pi*Omega^(l,s), area; not collision-frequency integral",
+      "unit": "m^2"
+    },
+    "Xe0_e_shared.csv": {
+      "source_file": "raw/mdpi/Collision Integrals/CiXenon/CI_Xe_e-.csv",
+      "rows": 33,
+      "temperature_min_K": 300.0,
+      "temperature_max_K": 30000.0,
+      "quantity": "pi*Omega^(l,s), area; not collision-frequency integral",
+      "unit": "m^2"
+    }
+  },
+  "orders": [
+    [
+      1,
+      1
+    ],
+    [
+      1,
+      2
+    ],
+    [
+      1,
+      3
+    ],
+    [
+      1,
+      4
+    ],
+    [
+      1,
+      5
+    ],
+    [
+      1,
+      6
+    ],
+    [
+      1,
+      7
+    ],
+    [
+      2,
+      2
+    ],
+    [
+      2,
+      3
+    ],
+    [
+      2,
+      4
+    ],
+    [
+      2,
+      5
+    ],
+    [
+      2,
+      6
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      3,
+      4
+    ],
+    [
+      3,
+      5
+    ],
+    [
+      4,
+      4
+    ]
+  ],
+  "coulomb": {
+    "source": "PPFM 0.2.0 src/OmegaCalculator.cpp, qcTxt initializer",
+    "file": "coulomb_reduced.csv",
+    "rows": 31,
+    "temperature_Tstar_min": 0.1,
+    "temperature_Tstar_max": 10000.0,
+    "formula_SI": "pi_Omega_m2 = pi * lambda_D_m**2 * F(Tstar) / Tstar**2",
+    "Tstar_definition": "4*pi*epsilon_0*k_B*T*lambda_D/(abs(Zi*Zj)*e**2)",
+    "interpolation_in_helper": "linear in log(Tstar), log(F); no extrapolation",
+    "not_a_function_of_T_alone": true,
+    "port_note": "Tables are mapped by (l,s) names. The C++ switch case 3 fall-through is not copied."
+  }
+}

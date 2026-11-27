@@ -14,7 +14,7 @@ def main(settings: RunSettings | None = None, argv: list[str] | None = None) -> 
     if settings is None:
         from config import SETTINGS
         settings = SETTINGS
-    parser = argparse.ArgumentParser(description="Семинарский расчёт состава плазмы Xe и Cs при одной или двух температурах.")
+    parser = argparse.ArgumentParser(description="Состав плазмы Xe/Cs и свойства Xe при одной или двух температурах.")
     parser.add_argument("--validate-only", action="store_true", help="Проверить CSV без расчёта состава.")
     parser.add_argument("--input-dir", type=Path)
     parser.add_argument("--output-dir", type=Path)
@@ -38,6 +38,16 @@ def main(settings: RunSettings | None = None, argv: list[str] | None = None) -> 
                         help="Группы графиков, например --plot-groups 1 3 4.")
     parser.add_argument("--plot-all", action="store_true",
                         help="Дополнительно сохранить общий график всех частиц.")
+    properties_options=parser.add_mutually_exclusive_group()
+    properties_options.add_argument("--xe-properties",dest="xe_properties_enabled",action="store_true",default=None,
+                                    help="Свойства Xe: Te=Th или ideal при Te!=Th. Сетка Xe ограничивается таблицами.")
+    properties_options.add_argument("--no-xe-properties",dest="xe_properties_enabled",action="store_false",
+                                    help="Отключить дополнительные свойства Xe.")
+    parser.add_argument("--xe-data",dest="xe_lte_data_path",type=Path,
+                        help="Путь к xe_lte_data.zip или распакованной папке; включает свойства Xe.")
+    parser.add_argument("--xe-collision-branch",choices=("traditional","phenomenological"))
+    parser.add_argument("--xe-high-ion-model",choices=("langevin_isotropic_capture","error"),
+                        help="Модель отсутствующих интегралов Xe–Xe2+,3+,4+; error запрещает приближение.")
     parser.add_argument("--quiet", action="store_true", help="Не печатать промежуточные результаты и таблицу.")
     args = parser.parse_args(argv)
     if args.fixed_gamma is not None and (args.heavy_temperature_k is not None or args.temperature_ratios is not None):
@@ -74,6 +84,14 @@ def main(settings: RunSettings | None = None, argv: list[str] | None = None) -> 
         updates["plot_groups"] = tuple(args.plot_groups)
     if args.plot_all:
         updates["plot_all_species"] = True
+    if args.xe_lte_data_path is not None:
+        updates.update(xe_lte_data_path=args.xe_lte_data_path,xe_properties_enabled=True)
+    if args.xe_properties_enabled is not None:
+        updates["xe_properties_enabled"]=args.xe_properties_enabled
+    if args.xe_collision_branch is not None:
+        updates["xe_collision_branch"]=args.xe_collision_branch
+    if args.xe_high_ion_model is not None:
+        updates["xe_high_ion_neutral_model"]=args.xe_high_ion_model
     settings = replace(settings, **updates)
     try:
         summary = run(settings, validate_only=args.validate_only, quiet=args.quiet)
@@ -82,5 +100,9 @@ def main(settings: RunSettings | None = None, argv: list[str] | None = None) -> 
         return 2
     if summary.failed_points:
         print(f"Несошедшихся точек: {summary.failed_points}. См. status/message в CSV.", file=sys.stderr)
+        return 1
+    if summary.xe_property_failed_points:
+        print(f"Неполные свойства Xe (ошибка или выход за область интегралов): точек {summary.xe_property_failed_points}. "
+              "См. статусы и message в xe_properties.csv; состав сохранён.",file=sys.stderr)
         return 1
     return 0

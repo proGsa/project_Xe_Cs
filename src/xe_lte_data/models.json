@@ -1,0 +1,108 @@
+{
+  "scope": {
+    "element": "Xe",
+    "temperature_ratio_Te_Th": 1.0,
+    "charges": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "primary_pressure_Pa": 100000.0,
+    "primary_temperature_range_K": [
+      3000,
+      30000
+    ],
+    "radiative_thermal_conductivity_included": false,
+    "magnetic_field_assumed_T": 0
+  },
+  "reference_model": {
+    "equilibrium": "LTE with Debye-Huckel corrections in the source",
+    "warning": "Different closure and level cutoff from the seminar nonideal model; not an exact validation target for that model."
+  },
+  "atomic_level_policy": {
+    "source": "User-supplied NIST ASD exports; extraction version/date unknown",
+    "energies": "Excitation energies relative to each charge-state ground level",
+    "weight": "g=2J+1, as parsed by the existing program",
+    "bound_levels_only": "Only E < I_bare retained; optional density-dependent cutoff requires a separate choice",
+    "counts": [
+      342,
+      161,
+      157,
+      94,
+      53
+    ]
+  },
+  "debye_length_LTE": {
+    "formula": "lambda_D = sqrt(epsilon_0*k_B*T/(e**2*(n_e + sum(z*z*n_z,z=1..4))))",
+    "alternative_electron_only_model_used_here": false
+  },
+  "source_DH_convention": {
+    "formation_correction_J": "-z**2*e**2/(8*pi*epsilon_0*lambda_D)",
+    "continuum_lowering_eV": "(z+1)*e**2/(4*pi*epsilon_0*lambda_D)/e",
+    "level_cutoff": "E_excitation <= I_bare - continuum_lowering",
+    "do_not_double_count": "Formation chemical-potential correction and altered level cutoff play different roles; do not add the same lowering twice to a Saha exponent."
+  },
+  "diagnostic_coupling_parameters": {
+    "Gamma_e_DH": "e**2/(4*pi*epsilon_0*lambda_D*k_B*T)",
+    "Gamma_e_WS": "e**2/(4*pi*epsilon_0*a_e*k_B*T), a_e=(3/(4*pi*n_e))**(1/3)",
+    "note": "Neither equals temperature ratio gamma_Te_Th. Neither is the seminar self-consistent regularized Gamma."
+  },
+  "polarizability": {
+    "Xe0_volume_m3": 4.0484e-30,
+    "Xe1_volume_m3": 2.8007e-30,
+    "convention": "alpha_volume = alpha_SI/(4*pi*epsilon_0)",
+    "source": "Entropy 28(7),830 (2026), Table 4 and text before Table 1"
+  },
+  "ILJ_parameters": [
+    {
+      "pair": "Xe0_Xe0",
+      "beta": 7.5686,
+      "D_eV": 0.0254,
+      "R_e_m": 4.3183e-10,
+      "m": 6
+    },
+    {
+      "pair": "Xe0_Xe1",
+      "beta": 7.133,
+      "D_eV": 0.1559,
+      "R_e_m": 3.8466e-10,
+      "m": 4
+    }
+  ],
+  "ILJ_definition": "V=D*[m/(n(x)-m)*x**(-n(x))-n(x)/(n(x)-m)*x**(-m)], x=r/Re, n=beta+4*x*x; charge exchange is not supplied by this potential alone",
+  "optional_polarization_model": {
+    "status": "candidate approximation; not a recovered MDPI table and not enabled implicitly",
+    "potential_SI": "V_J(r) = -C4/r_m**4; C4 = (z*e)**2*alpha_volume/(8*pi*epsilon_0)",
+    "C4_unit": "J*m^4",
+    "parameters": [
+      {
+        "pair": "Xe0_Xe2",
+        "charge": 2,
+        "C4_J_m4": 1.8679945513142185e-57
+      },
+      {
+        "pair": "Xe0_Xe3",
+        "charge": 3,
+        "C4_J_m4": 4.202987740456992e-57
+      },
+      {
+        "pair": "Xe0_Xe4",
+        "charge": 4,
+        "C4_J_m4": 7.471978205256874e-57
+      }
+    ],
+    "basis": "PPFM 0.2.0 src/Potential.cpp Polarization and analogous Ar-Ar2+ example in main.cpp",
+    "limitations": [
+      "Only long-range induction; short-range scattering is unspecified",
+      "Not a tabulated momentum-transfer cross section or collision integral",
+      "No inelastic charge-transfer or excited-state-specific channels supplied"
+    ]
+  },
+  "independent_transport_calculation": {
+    "required_method": "Chapman-Enskog mixture treatment with electron/heavy-species formulation, e.g. Devoto or Zhang-Murphy; choose orders and integral normalization consistently",
+    "code_reference": "upstream/PPFM-0.2.0-zenodo.zip",
+    "not_included": "A verified standalone Python implementation of the full transport solver"
+  }
+}

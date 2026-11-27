@@ -1,0 +1,22 @@
+species_i,species_j,charge_i,charge_j,status,data_or_model,note
+e,e,-1,-1,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+e,Xe0,-1,0,tabulated_area_integrals,collision_integrals/Xe0_e_*.csv,"Two neutral-potential branches except electron-neutral, which is shared"
+e,Xe1,-1,1,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+e,Xe2,-1,2,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+e,Xe3,-1,3,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+e,Xe4,-1,4,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe0,Xe0,0,0,tabulated_area_integrals,collision_integrals/Xe0_Xe0_*.csv,"Two neutral-potential branches except electron-neutral, which is shared"
+Xe0,Xe1,0,1,tabulated_area_integrals,collision_integrals/Xe0_Xe1_*.csv,"Two neutral-potential branches except electron-neutral, which is shared"
+Xe0,Xe2,0,2,model_choice_required,models.json: optional_polarization_model,"No pair-specific table confirmed; C4/r^4 potential only, no short-range or charge-transfer data"
+Xe0,Xe3,0,3,model_choice_required,models.json: optional_polarization_model,"No pair-specific table confirmed; C4/r^4 potential only, no short-range or charge-transfer data"
+Xe0,Xe4,0,4,model_choice_required,models.json: optional_polarization_model,"No pair-specific table confirmed; C4/r^4 potential only, no short-range or charge-transfer data"
+Xe1,Xe1,1,1,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe1,Xe2,1,2,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe1,Xe3,1,3,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe1,Xe4,1,4,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe2,Xe2,2,2,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe2,Xe3,2,3,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe2,Xe4,2,4,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe3,Xe3,3,3,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe3,Xe4,3,4,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation
+Xe4,Xe4,4,4,reduced_coulomb_tables,collision_integrals/coulomb_reduced.csv,Needs local Debye length and bounded Tstar interpolation

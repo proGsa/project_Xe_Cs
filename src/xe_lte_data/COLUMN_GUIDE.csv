@@ -1,0 +1,31 @@
+column,unit,description_ru,provenance
+T_h_K,K,Температура тяжёлых частиц,source_temperature
+T_e_K,K,Температура электронов; равна T_h,derived_copy
+gamma_Te_Th,1,Отношение T_e/T_h; всегда 1,defined
+pressure_Pa,Pa,Давление в Па; единица подписи atm истолкована как бар,source_pressure_interpretation
+n_Xe0_m3,m^-3,Концентрация Xe заряда 0,source
+n_Xe1_m3,m^-3,Концентрация Xe заряда 1,source
+n_Xe2_m3,m^-3,Концентрация Xe заряда 2,source
+n_Xe3_m3,m^-3,Концентрация Xe заряда 3,source
+n_Xe4_m3,m^-3,Концентрация Xe заряда 4,source
+n_e_m3,m^-3,Концентрация электронов,source
+n_total_m3,m^-3,Суммарная концентрация частиц,source
+rho_kg_m3,kg/m^3,Массовая плотность,source
+cp_J_kg_K,J/(kg K),Удельная равновесная теплоёмкость при постоянном давлении,source
+h_J_kg,J/kg,Удельная энтальпия h_e+h_h,source
+e_J_kg_derived,J/kg,Удельная внутренняя энергия e=h-p/rho,derived
+u_J_m3_derived,J/m^3,Объёмная внутренняя энергия u=rho*h-p,derived
+adiabatic_index_cp_cv,1,Отношение Cp/Cv; исходная термодинамическая gamma,source_renamed
+sound_speed_m_s,m/s,Скорость звука,source
+lambda_e_W_m_K,W/(m K),Электронный вклад в теплопроводность,source
+lambda_h_W_m_K,W/(m K),Поступательный вклад тяжёлых частиц,source
+lambda_reaction_W_m_K,W/(m K),Реакционный вклад,source
+lambda_internal_W_m_K,W/(m K),Внутренний вклад; отрицательные исходные значения сохранены и перечислены в validation.json,source
+lambda_total_W_m_K,W/(m K),Сумма четырёх вкладов; без излучения,derived_sum
+eta_Pa_s,Pa s,Динамическая вязкость; исходная mu,source_renamed
+sigma_S_m,S/m,Электропроводность,source
+heat_exchange_source_value,source label: J,Неустановленная нормировка; сохранено только для прослеживаемости,uninterpreted_source
+debye_length_m_derived,m,Дебаевская длина по всем заряженным частицам,derived_model
+Gamma_e_DH_derived,1,e^2/(4*pi*epsilon0*lambdaD*kB*T); не семинарская Gamma,derived_model
+Gamma_e_WS_derived,1,e^2/(4*pi*epsilon0*a_e*kB*T); не семинарская Gamma,derived_model
+DH_pressure_correction_Pa_derived,Pa,Положительный модуль дебаевского снижения давления kB*T/(24*pi*lambdaD^3),derived_model

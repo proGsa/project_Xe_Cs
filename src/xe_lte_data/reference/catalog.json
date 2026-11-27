@@ -1,0 +1,212 @@
+[
+  {
+    "file": "xe_lte_100000Pa_traditional.csv",
+    "branch": "traditional",
+    "pressure_Pa": 100000.0,
+    "source_pressure_label": "1 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 1 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 1 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Traditional/TP_Xe Transport 1 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_100000Pa_phenomenological.csv",
+    "branch": "phenomenological",
+    "pressure_Pa": 100000.0,
+    "source_pressure_label": "1 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 1 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 1 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Phenomenological/TP_Xe Transport 1 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_200000Pa_traditional.csv",
+    "branch": "traditional",
+    "pressure_Pa": 200000.0,
+    "source_pressure_label": "2 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 2 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 2 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Traditional/TP_Xe Transport 2 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_200000Pa_phenomenological.csv",
+    "branch": "phenomenological",
+    "pressure_Pa": 200000.0,
+    "source_pressure_label": "2 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 2 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 2 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Phenomenological/TP_Xe Transport 2 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_500000Pa_traditional.csv",
+    "branch": "traditional",
+    "pressure_Pa": 500000.0,
+    "source_pressure_label": "5 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 5 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 5 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Traditional/TP_Xe Transport 5 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_500000Pa_phenomenological.csv",
+    "branch": "phenomenological",
+    "pressure_Pa": 500000.0,
+    "source_pressure_label": "5 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 5 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 5 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Phenomenological/TP_Xe Transport 5 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_1000000Pa_traditional.csv",
+    "branch": "traditional",
+    "pressure_Pa": 1000000.0,
+    "source_pressure_label": "10 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 10 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 10 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Traditional/TP_Xe Transport 10 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_1000000Pa_phenomenological.csv",
+    "branch": "phenomenological",
+    "pressure_Pa": 1000000.0,
+    "source_pressure_label": "10 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 10 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 10 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Phenomenological/TP_Xe Transport 10 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_2000000Pa_traditional.csv",
+    "branch": "traditional",
+    "pressure_Pa": 2000000.0,
+    "source_pressure_label": "20 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 20 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 20 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Traditional/TP_Xe Transport 20 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_2000000Pa_phenomenological.csv",
+    "branch": "phenomenological",
+    "pressure_Pa": 2000000.0,
+    "source_pressure_label": "20 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 20 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 20 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Phenomenological/TP_Xe Transport 20 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_5000000Pa_traditional.csv",
+    "branch": "traditional",
+    "pressure_Pa": 5000000.0,
+    "source_pressure_label": "50 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 50 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 50 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Traditional/TP_Xe Transport 50 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_5000000Pa_phenomenological.csv",
+    "branch": "phenomenological",
+    "pressure_Pa": 5000000.0,
+    "source_pressure_label": "50 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 50 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 50 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Phenomenological/TP_Xe Transport 50 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_10000000Pa_traditional.csv",
+    "branch": "traditional",
+    "pressure_Pa": 10000000.0,
+    "source_pressure_label": "100 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 100 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 100 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Traditional/TP_Xe Transport 100 atm.csv"
+    ]
+  },
+  {
+    "file": "xe_lte_10000000Pa_phenomenological.csv",
+    "branch": "phenomenological",
+    "pressure_Pa": 10000000.0,
+    "source_pressure_label": "100 atm",
+    "temperature_min_K": 300.0,
+    "temperature_max_K": 30000.0,
+    "temperature_step_K": 100.0,
+    "rows": 298,
+    "source_files": [
+      "raw/mdpi/Compositions/Xenon/Comp_Xe Composition 100 atm.csv",
+      "raw/mdpi/Thermodynamic Properties/Xenon/TH_Xe Thermodynamics 100 atm.csv",
+      "raw/mdpi/Transport Properties/Xenon/Phenomenological/TP_Xe Transport 100 atm.csv"
+    ]
+  }
+]

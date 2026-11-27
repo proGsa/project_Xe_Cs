@@ -1,0 +1,51 @@
+[
+  {
+    "source_pressure_label": "1 atm",
+    "adopted_pressure_Pa": 100000.0,
+    "n_total_kBT_at_300K_Pa": 99999.8548104,
+    "relative_difference_from_adopted_pressure": 1.4518960000931003e-06,
+    "basis": "Supplement license and article main text specify bars; low-temperature EOS agrees."
+  },
+  {
+    "source_pressure_label": "2 atm",
+    "adopted_pressure_Pa": 200000.0,
+    "n_total_kBT_at_300K_Pa": 199999.7096208,
+    "relative_difference_from_adopted_pressure": 1.4518960000931003e-06,
+    "basis": "Supplement license and article main text specify bars; low-temperature EOS agrees."
+  },
+  {
+    "source_pressure_label": "5 atm",
+    "adopted_pressure_Pa": 500000.0,
+    "n_total_kBT_at_300K_Pa": 499999.2740520001,
+    "relative_difference_from_adopted_pressure": 1.4518959998710557e-06,
+    "basis": "Supplement license and article main text specify bars; low-temperature EOS agrees."
+  },
+  {
+    "source_pressure_label": "10 atm",
+    "adopted_pressure_Pa": 1000000.0,
+    "n_total_kBT_at_300K_Pa": 999998.5481040002,
+    "relative_difference_from_adopted_pressure": 1.4518959998710557e-06,
+    "basis": "Supplement license and article main text specify bars; low-temperature EOS agrees."
+  },
+  {
+    "source_pressure_label": "20 atm",
+    "adopted_pressure_Pa": 2000000.0,
+    "n_total_kBT_at_300K_Pa": 1999997.0962080003,
+    "relative_difference_from_adopted_pressure": 1.4518959998710557e-06,
+    "basis": "Supplement license and article main text specify bars; low-temperature EOS agrees."
+  },
+  {
+    "source_pressure_label": "50 atm",
+    "adopted_pressure_Pa": 5000000.0,
+    "n_total_kBT_at_300K_Pa": 4999992.74052,
+    "relative_difference_from_adopted_pressure": 1.4518959998710557e-06,
+    "basis": "Supplement license and article main text specify bars; low-temperature EOS agrees."
+  },
+  {
+    "source_pressure_label": "100 atm",
+    "adopted_pressure_Pa": 10000000.0,
+    "n_total_kBT_at_300K_Pa": 9999985.48104,
+    "relative_difference_from_adopted_pressure": 1.4518959998710557e-06,
+    "basis": "Supplement license and article main text specify bars; low-temperature EOS agrees."
+  }
+]

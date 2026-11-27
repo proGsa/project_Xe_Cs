@@ -39,6 +39,12 @@ class RunSettings:
     heavy_temperature_k: float = 4000.0
     temperature_ratios: tuple[float, ...] = tuple(1.0 + 0.25 * i for i in range(17))
     fixed_temperature_ratio: float = 2.0
+    xe_properties_enabled: bool = False
+    xe_lte_data_path: Path | None = None
+    xe_collision_branch: str = "traditional"
+    xe_high_ion_neutral_model: str = "langevin_isotropic_capture"
+    xe_heat_capacity_relative_step: float = 1e-3
+    xe_heat_capacity_tolerance: float = 5e-4
 
     def validate(self) -> None:
         for name in (
@@ -47,12 +53,21 @@ class RunSettings:
             "gamma_tolerance", "max_log_step", "minimum_temperature_step_k",
             "heavy_temperature_k",
             "fixed_temperature_ratio",
+            "xe_heat_capacity_relative_step", "xe_heat_capacity_tolerance",
         ):
             value = getattr(self, name)
             if not np.isfinite(value) or value <= 0:
                 raise ValueError(f"{name}: требуется положительное конечное число.")
         if self.temperature_stop_k < self.temperature_start_k:
             raise ValueError("Конечная температура меньше начальной.")
+        if not isinstance(self.xe_properties_enabled, bool):
+            raise ValueError("xe_properties_enabled должен быть bool.")
+        if self.xe_collision_branch not in ("traditional", "phenomenological"):
+            raise ValueError("xe_collision_branch: traditional или phenomenological.")
+        if self.xe_high_ion_neutral_model not in ("langevin_isotropic_capture", "error"):
+            raise ValueError("xe_high_ion_neutral_model: langevin_isotropic_capture или error.")
+        if self.xe_heat_capacity_relative_step > .05 or self.xe_heat_capacity_tolerance >= 1:
+            raise ValueError("Шаг производной должен быть <= 0.05, допуск теплоёмкости < 1.")
         if (self.temperature_stop_k - self.temperature_start_k) / self.temperature_step_k > 100_000:
             raise ValueError("Температурная сетка содержит более 100000 интервалов.")
         if not isinstance(self.max_charge, int) or isinstance(self.max_charge, bool) or not 1 <= self.max_charge <= 4:

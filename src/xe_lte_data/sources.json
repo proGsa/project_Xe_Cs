@@ -1,0 +1,53 @@
+{
+  "assembled_on": "2026-11-26",
+  "element": "Xe",
+  "sources": [
+    {
+      "id": "mdpi2026",
+      "title": "Cross-Code Verification for Improved Thermophysical Properties of Argon, Krypton and Xenon Plasmas",
+      "authors": [
+        "Alberto Vagnoni",
+        "Anthony B. Murphy",
+        "Emanuele Ghedini"
+      ],
+      "doi": "10.3390/e28070830",
+      "url": "https://www.mdpi.com/1099-4300/28/7/830",
+      "supplement_url": "https://www.mdpi.com/article/10.3390/e28070830/s1",
+      "retrieved": "2026-11-26",
+      "license": "CC BY 4.0",
+      "downloaded_archive_sha256": "4aa21a8d5cbbf22a3a721f0176f80c6d658768ddfb95211dd0e68c7516ca6dfa",
+      "local_selection": "raw/mdpi: Xe-only original CSVs; all normalized/derived columns are our transformations"
+    },
+    {
+      "id": "nist_asd",
+      "url": "https://physics.nist.gov/asd",
+      "input": "user-supplied CSV files already used by the project",
+      "extraction_date": "unknown",
+      "database_version": "unknown",
+      "fresh_download": false,
+      "normalization": "atomic/import_report.json lists all excluded and estimated rows"
+    },
+    {
+      "id": "codata2022",
+      "url": "https://physics.nist.gov/cuu/Constants/",
+      "distribution": "scipy.constants physical_constants, SciPy 1.17.0",
+      "note": "NIST current constants page explicitly identifies CODATA 2022; ASCII download returned HTTP 403, so values are taken from the versioned SciPy distribution"
+    },
+    {
+      "id": "ciaaw",
+      "url": "https://ciaaw.org/xenon.htm",
+      "value": "Ar(Xe)=131.293(6)"
+    },
+    {
+      "id": "ppfm",
+      "version": "0.2.0",
+      "url": "https://zenodo.org/records/20260747",
+      "doi": "10.5281/zenodo.20260747",
+      "license": "CC BY 4.0",
+      "upstream_md5": "6bb6cb4fbf55b696af7e85e7b1099d50",
+      "upstream_sha256": "2fa2c0b8b3ac61679ff6b0ddfedf1ce6b5d5590918dc62c5a6d6587bcb1d0476",
+      "github_tag_tree_sha": "e7933f17b40268a8012af2e1a13ccff04b53f4d8",
+      "note": "Release predates the July 2026 article; it is a method/code reference, not a guaranteed exact snapshot of the calculations in the supplement."
+    }
+  ]
+}

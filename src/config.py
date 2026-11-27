@@ -16,7 +16,7 @@ SETTINGS = RunSettings(
     # Или задай sweep_mode="temperature_ratio", models=("ideal",)
     # и output_dir=BASE_DIR / "results_two_temperature".
     heavy_temperature_k=4000.0,  # T_h фиксирована в двухтемпературной прогонке.
-    temperature_ratios=tuple(1.0 + 0.25 * i for i in range(17)),  # gamma: 1..5.
+    temperature_ratios=tuple(1.0 + 0.25 * i for i in range(5)),  # Начальный пример: gamma 1..2.
     # Рост T_h при постоянном gamma: uv run main.py --fixed-gamma 2
     # Для запуска без флага: sweep_mode="fixed_ratio", models=("ideal",),
     # output_dir=BASE_DIR / "results_fixed_gamma_2".
@@ -39,4 +39,16 @@ SETTINGS = RunSettings(
     show_plots=False,           # PNG сохраняются в любом случае.
     plot_groups=(1, 2, 3, 4),   # 1: 0,+1,e; 2: +1,e,+2; 3: +2,+3; 4: +3,+4.
     plot_all_species=True,     # Дополнительно сохранять общий график всех частиц.
+    # При Te!=Th свойства доступны только для ideal; при gamma=1 доступны оба режима.
+    xe_properties_enabled=True,
+    # Для Xe сетка автоматически ограничивается 300 <= Th,Te <= 30000 K.
+    # При fixed_ratio=2 и исходной сетке выше: Th=3000..15000 K, Te=6000..30000 K.
+    # Дополнительно проверяется T* каждой кулоновской пары, без экстраполяции.
+    xe_lte_data_path=BASE_DIR / "input" / "xe_lte_data.zip",
+    xe_collision_branch="traditional",  # Или phenomenological; обе ветви из архива.
+    # Приближение для отсутствующих таблиц Xe–Xe2+,3+,4+; это НЕ данные MDPI.
+    # Значение "error" запрещает такую замену и оставляет транспорт без результата.
+    xe_high_ion_neutral_model="langevin_isotropic_capture",
+    xe_heat_capacity_relative_step=1e-3,  # Начальный dT/T, dp/p; затем уточнение.
+    xe_heat_capacity_tolerance=5e-4,
 )

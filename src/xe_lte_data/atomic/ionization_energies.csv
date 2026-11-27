@@ -1,0 +1,6 @@
+initial_charge,ionization_energy_eV,ionization_energy_J,cumulative_formation_energy_eV,cumulative_formation_energy_J,use
+0,12.1298437,1.9434152150212105e-18,0.0,0.0,composition_and_level_cutoff
+1,20.975,3.360565489815e-18,12.1298437,1.9434152150212105e-18,composition_and_level_cutoff
+2,31.05,4.97475844857e-18,33.1048437,5.303980704836211e-18,composition_and_level_cutoff
+3,42.2,6.76118539548e-18,64.1548437,1.027873915340621e-17,composition_and_level_cutoff
+4,54.1,8.667775589939999e-18,106.3548437,1.703992454888621e-17,level_cutoff_only

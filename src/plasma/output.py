@@ -54,9 +54,23 @@ def solution_row(solution: Solution, settings: RunSettings) -> dict:
     return row
 
 
-def write_csv(solutions: list[Solution], settings: RunSettings) -> Path:
+def write_csv(solutions: list[Solution], settings: RunSettings,
+              xe_properties: tuple[dict, ...] | None = None) -> Path:
     path = Path(settings.output_dir) / "concentrations.csv"
     rows = [solution_row(x, settings) for x in solutions]
+    if xe_properties:
+        from .xe_properties import _VALUES
+        keys=(*_VALUES,"thermodynamic_model","thermodynamics_status","heat_capacity_status",
+              "transport_status","properties_status","high_ion_neutral_model",
+              "heat_capacity_temperature","heat_capacity_constraint","lambda_temperature_gradient",
+              "reactive_transport_model")
+        lookup={(r["model"],r["T_h_K"],r["gamma_Te_Th"]):r for r in xe_properties}
+        for row in rows:
+            extra=lookup.get((row["model"],row["T_h_K"],row["gamma_Te_Th"])) if row["element"]=="Xe" else None
+            row.update({key:extra[key] if extra else "" for key in keys})
+            row["properties_message"]=extra["message"] if extra else ""
+            if extra is None:
+                row["properties_status"]="not_applicable"
     if not rows:
         raise ValueError("Нет результатов для сохранения.")
     with path.open("w", encoding="utf-8-sig", newline="") as stream:
@@ -179,10 +193,12 @@ def plot_results(solutions: list[Solution], settings: RunSettings) -> list[Path]
     return paths
 
 
-def write_metadata(settings: RunSettings, data: dict[str, AtomicData], failed: int) -> Path:
+def write_metadata(settings: RunSettings, data: dict[str, AtomicData], failed: int,
+                   xe_properties: dict | None = None) -> Path:
     values = asdict(settings)
     values["input_dir"] = str(Path(settings.input_dir).resolve())
     values["output_dir"] = str(Path(settings.output_dir).resolve())
+    values["xe_lte_data_path"] = str(Path(settings.xe_lte_data_path).resolve()) if settings.xe_lte_data_path is not None else None
     if settings.sweep_mode == "temperature_ratio":
         physical_model = (
             "two-temperature ideal; Saha and electronic excitation at T_e; fixed p,T_h; "
@@ -205,6 +221,7 @@ def write_metadata(settings: RunSettings, data: dict[str, AtomicData], failed: i
         "temperature_ratio_grid": settings.ratios().tolist() if settings.sweep_mode == "temperature_ratio" else None,
         "fixed_temperature_ratio": settings.fixed_temperature_ratio if settings.sweep_mode == "fixed_ratio" else None,
         "failed_points": failed,
+        "xe_properties": xe_properties,
         "skipped_plot_groups": [g for g in settings.plot_groups if g > settings.max_charge],
         "loaded_levels": {name: [len(x.energies_ev) for x in atom.levels] for name, atom in data.items()},
         "notes": [

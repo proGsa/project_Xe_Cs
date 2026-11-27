@@ -1,0 +1,9 @@
+{
+  "status": "passed_with_source_flags",
+  "checks": 215,
+  "reference_tables": 14,
+  "reference_rows": 4172,
+  "nonphysical_source_rows": 2,
+  "default_reader_blocks_flagged_rows": true,
+  "scope": "Integrity, schemas, units, derived identities, interpolation and ideal neutral-gas limit; not experimental validation."
+}

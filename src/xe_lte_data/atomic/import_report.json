@@ -1,0 +1,256 @@
+[
+  {
+    "path": "raw/nist/xe_ionization.csv",
+    "kind": "ionization",
+    "unit": "eV",
+    "total_rows": 54,
+    "accepted_rows": 54,
+    "estimated_rows": 49,
+    "skipped": {},
+    "skipped_examples": {},
+    "warnings": [
+      "Есть значения в скобках NIST для зарядов [1, 2, 4, 6, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53]; учти их неопределённость при интерпретации."
+    ]
+  },
+  {
+    "path": "raw/nist/xe_1.csv",
+    "kind": "levels",
+    "unit": "eV",
+    "total_rows": 445,
+    "accepted_rows": 342,
+    "estimated_rows": 3,
+    "skipped": {
+      "ionization_limit": 2,
+      "above_bare_ionization_threshold": 101
+    },
+    "skipped_examples": {
+      "ionization_limit": [
+        {
+          "line": 344,
+          "values": {
+            "Configuration": "Xe II (5s2.5p5 2P*<3/2>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "",
+            "Level (eV)": "12.1298437",
+            "Suffix": "",
+            "Uncertainty (eV)": "0.0000015",
+            "Reference": "L12013,L9794,L6426"
+          }
+        },
+        {
+          "line": 396,
+          "values": {
+            "Configuration": "Xe II (5s2.5p5 2P*<1/2>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "",
+            "Level (eV)": "13.436267",
+            "Suffix": "",
+            "Uncertainty (eV)": "",
+            "Reference": ""
+          }
+        }
+      ],
+      "above_bare_ionization_threshold": [
+        {
+          "line": 345,
+          "values": {
+            "Configuration": "5p5.(2P*<1/2>).7p",
+            "Term": "2[3/2]",
+            "J": "1",
+            "Prefix": "",
+            "Level (eV)": "12.25646",
+            "Suffix": "",
+            "Uncertainty (eV)": "",
+            "Reference": "L5272"
+          }
+        },
+        {
+          "line": 346,
+          "values": {
+            "Configuration": "5p5.(2P*<1/2>).7p",
+            "Term": "2[1/2]",
+            "J": "1",
+            "Prefix": "",
+            "Level (eV)": "12.28098",
+            "Suffix": "",
+            "Uncertainty (eV)": "",
+            "Reference": "L5272"
+          }
+        },
+        {
+          "line": 347,
+          "values": {
+            "Configuration": "5p5.(2P*<1/2>).7p",
+            "Term": "2[3/2]",
+            "J": "2",
+            "Prefix": "",
+            "Level (eV)": "12.28292",
+            "Suffix": "",
+            "Uncertainty (eV)": "",
+            "Reference": "L5272"
+          }
+        }
+      ]
+    },
+    "warnings": [
+      "Принято уровней с энергией в скобках NIST: 3; скобки не означают нулевую энергию."
+    ]
+  },
+  {
+    "path": "raw/nist/xe_2.csv",
+    "kind": "levels",
+    "unit": "eV",
+    "total_rows": 164,
+    "accepted_rows": 161,
+    "estimated_rows": 0,
+    "skipped": {
+      "ionization_limit": 3
+    },
+    "skipped_examples": {
+      "ionization_limit": [
+        {
+          "line": 163,
+          "values": {
+            "Configuration": "Xe III (5s2.5p4 3P<2>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "[",
+            "Level (eV)": "20.975",
+            "Suffix": "]",
+            "Uncertainty (eV)": "0.004",
+            "Reference": "L6925"
+          }
+        },
+        {
+          "line": 164,
+          "values": {
+            "Configuration": "Xe III (5s2.5p4 3P<0>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "",
+            "Level (eV)": "21.9830",
+            "Suffix": "",
+            "Uncertainty (eV)": "",
+            "Reference": ""
+          }
+        },
+        {
+          "line": 165,
+          "values": {
+            "Configuration": "Xe III (5s2.5p4 3P<1>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "",
+            "Level (eV)": "22.1893",
+            "Suffix": "",
+            "Uncertainty (eV)": "",
+            "Reference": ""
+          }
+        }
+      ]
+    },
+    "warnings": []
+  },
+  {
+    "path": "raw/nist/xe_3.csv",
+    "kind": "levels",
+    "unit": "eV",
+    "total_rows": 158,
+    "accepted_rows": 157,
+    "estimated_rows": 0,
+    "skipped": {
+      "ionization_limit": 1
+    },
+    "skipped_examples": {
+      "ionization_limit": [
+        {
+          "line": 159,
+          "values": {
+            "Configuration": "Xe IV (5s2.5p3 4S<3/2>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "[",
+            "Level (eV)": "31.05",
+            "Suffix": "]",
+            "Uncertainty (eV)": "0.04",
+            "Reference": "L4660,L10579"
+          }
+        }
+      ]
+    },
+    "warnings": []
+  },
+  {
+    "path": "raw/nist/xe_4.csv",
+    "kind": "levels",
+    "unit": "eV",
+    "total_rows": 95,
+    "accepted_rows": 94,
+    "estimated_rows": 0,
+    "skipped": {
+      "ionization_limit": 1
+    },
+    "skipped_examples": {
+      "ionization_limit": [
+        {
+          "line": 96,
+          "values": {
+            "Configuration": "Xe V (5s2.5p2 3P<0>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "",
+            "Level (eV)": "42.20",
+            "Suffix": "",
+            "Uncertainty (eV)": "0.20",
+            "Reference": "L8774"
+          }
+        }
+      ]
+    },
+    "warnings": []
+  },
+  {
+    "path": "raw/nist/xe_5.csv",
+    "kind": "levels",
+    "unit": "eV",
+    "total_rows": 55,
+    "accepted_rows": 53,
+    "estimated_rows": 0,
+    "skipped": {
+      "ionization_limit": 2
+    },
+    "skipped_examples": {
+      "ionization_limit": [
+        {
+          "line": 55,
+          "values": {
+            "Configuration": "Xe VI (5s2.5p 2P<1/2>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "[",
+            "Level (eV)": "54.1",
+            "Suffix": "]",
+            "Uncertainty (eV)": "0.5",
+            "Reference": "L11121"
+          }
+        },
+        {
+          "line": 56,
+          "values": {
+            "Configuration": "Xe VI (5s2.5p 2P*<3/2>)",
+            "Term": "Limit",
+            "J": "---",
+            "Prefix": "",
+            "Level (eV)": "56.0779",
+            "Suffix": "",
+            "Uncertainty (eV)": "",
+            "Reference": ""
+          }
+        }
+      ]
+    },
+    "warnings": []
+  }
+]

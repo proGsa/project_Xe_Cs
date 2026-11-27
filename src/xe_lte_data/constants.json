@@ -1,0 +1,58 @@
+{
+  "k_B": {
+    "value": 1.380649e-23,
+    "unit": "J K^-1",
+    "standard_uncertainty": 0.0,
+    "source": "CODATA 2022, values distributed with SciPy 1.17.0"
+  },
+  "e": {
+    "value": 1.602176634e-19,
+    "unit": "C",
+    "standard_uncertainty": 0.0,
+    "source": "CODATA 2022, values distributed with SciPy 1.17.0"
+  },
+  "h": {
+    "value": 6.62607015e-34,
+    "unit": "J Hz^-1",
+    "standard_uncertainty": 0.0,
+    "source": "CODATA 2022, values distributed with SciPy 1.17.0"
+  },
+  "m_e": {
+    "value": 9.1093837139e-31,
+    "unit": "kg",
+    "standard_uncertainty": 2.8e-40,
+    "source": "CODATA 2022, values distributed with SciPy 1.17.0"
+  },
+  "m_u": {
+    "value": 1.66053906892e-27,
+    "unit": "kg",
+    "standard_uncertainty": 5.2e-37,
+    "source": "CODATA 2022, values distributed with SciPy 1.17.0"
+  },
+  "epsilon_0": {
+    "value": 8.8541878188e-12,
+    "unit": "F m^-1",
+    "standard_uncertainty": 1.4e-21,
+    "source": "CODATA 2022, values distributed with SciPy 1.17.0"
+  },
+  "N_A": {
+    "value": 6.02214076e+23,
+    "unit": "mol^-1",
+    "standard_uncertainty": 0.0,
+    "source": "CODATA 2022, values distributed with SciPy 1.17.0"
+  },
+  "Xe_relative_atomic_mass": {
+    "value": 131.293,
+    "standard_uncertainty": 0.006,
+    "unit": "1",
+    "source": "CIAAW, normal terrestrial isotopic composition"
+  },
+  "conversions": {
+    "eV_to_J": 1.602176634e-19,
+    "angstrom_to_m": 1e-10,
+    "angstrom2_to_m2": 1e-20,
+    "angstrom3_to_m3": 1e-30,
+    "bar_to_Pa": 100000.0,
+    "standard_atm_to_Pa": 101325.0
+  }
+}

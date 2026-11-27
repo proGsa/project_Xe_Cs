@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "xe-cs-plasma"
-version = "0.3.0"
-description = "Seminar Newton solver for one-temperature and ideal two-temperature Xe and Cs plasma composition"
+version = "0.5.0"
+description = "Xe and Cs plasma composition with Xe one/two-temperature thermodynamics and approximate transport"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = ["numpy>=1.24", "scipy>=1.10", "matplotlib>=3.7"]

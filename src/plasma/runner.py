@@ -10,6 +10,9 @@ from .model import prepare_state
 from .output import plot_results, print_table, write_csv, write_metadata
 from .settings import RunSettings
 from .solver import Solution, solve_state
+from .xe_dataset import XeDataset
+from .xe_domain import ratio_grid, temperature_grid
+from .xe_properties import run_xe_properties
 
 
 @dataclass(frozen=True)
@@ -19,6 +22,8 @@ class RunSummary:
     csv_path: Path | None = None
     plot_paths: tuple[Path, ...] = ()
     metadata_path: Path | None = None
+    xe_properties_path: Path | None = None
+    xe_property_failed_points: int = 0
 
     @property
     def failed_points(self) -> int:
@@ -80,11 +85,11 @@ def temperature_sweep(
 ) -> list[Solution]:
     """Рост T_h при gamma=1 либо при заданном постоянном T_e/T_h."""
     solutions = []
-    temperatures = settings.temperatures()
     fixed_ratio = settings.sweep_mode == "fixed_ratio"
     ratio = settings.fixed_temperature_ratio if fixed_ratio else 1.0
     for element in settings.elements:
         atom = data[element]
+        temperatures = temperature_grid(settings,element)
         previous: dict[str, Solution] = {}
         for temperature in temperatures:
             te = float(ratio * temperature)
@@ -132,10 +137,10 @@ def temperature_ratio_sweep(
     if settings.sweep_mode != "temperature_ratio":
         raise ValueError("Для прогонки отношения температур требуется sweep_mode='temperature_ratio'.")
     solutions = []
-    ratios = settings.ratios()
     th = float(settings.heavy_temperature_k)
     for element in settings.elements:
         atom = data[element]
+        ratios = ratio_grid(settings,element)
         baseline = solve_state(prepare_state(atom, th, settings), settings, "ideal")
         previous = baseline if baseline.converged else None
         for ratio in ratios:
@@ -164,6 +169,10 @@ def temperature_ratio_sweep(
 
 def run(settings: RunSettings, validate_only: bool = False, quiet: bool = False) -> RunSummary:
     atoms, validation = validate_inputs(settings)
+    dataset = None
+    if settings.xe_properties_enabled and "Xe" in atoms:
+        data_path = settings.xe_lte_data_path or Path(settings.input_dir)/"xe_lte_data.zip"
+        dataset = XeDataset(data_path)
     if not quiet:
         if settings.sweep_mode == "temperature_ratio":
             print(f"Идеальная двухтемпературная модель: T_h={settings.heavy_temperature_k:g} K, "
@@ -182,20 +191,43 @@ def run(settings: RunSettings, validate_only: bool = False, quiet: bool = False)
                 for warning in report.warnings:
                     print(f"  {Path(report.path).name}: {warning}")
         print(f"Отчёт входных данных: {validation}")
+        if dataset is not None:
+            print(f"Свойства Xe: LTE либо ideal при Te!=Th; ветвь {settings.xe_collision_branch}.")
+            print(f"Модель отсутствующих пар Xe–Xe2+,3+,4+: {settings.xe_high_ion_neutral_model}.")
+            if settings.sweep_mode == "temperature_ratio":
+                grid=ratio_grid(settings,"Xe")
+                print(f"Сетка Xe ограничена таблицами: gamma={grid[0]:g}..{grid[-1]:g}, точек {len(grid)}; Th фиксирована.")
+            else:
+                grid=temperature_grid(settings,"Xe")
+                print(f"Сетка Xe ограничена таблицами: Th={grid[0]:g}..{grid[-1]:g} K, точек {len(grid)}.")
+            print("Cp,Cv: производные по Th при gamma=const; lambda относится к градиенту Th.")
     if validate_only:
         return RunSummary((), validation)
     sweep = temperature_ratio_sweep if settings.sweep_mode == "temperature_ratio" else temperature_sweep
     solutions = sweep(atoms, settings, None if quiet else print)
-    csv_path = write_csv(solutions, settings)
+    properties = (run_xe_properties(solutions,atoms["Xe"],dataset,settings,None if quiet else print)
+                  if dataset is not None else None)
+    csv_path = write_csv(solutions, settings, properties.rows if properties else None)
     plots = plot_results(solutions, settings)
-    metadata = write_metadata(settings, atoms, sum(not x.converged for x in solutions))
+    if properties:
+        plots.extend(properties.plot_paths)
+    metadata = write_metadata(settings, atoms, sum(not x.converged for x in solutions),
+                              properties.metadata if properties else None)
     if not quiet:
         print()
         print_table(solutions, settings)
+        if properties:
+            print("\nСвойства Xe: u,h в Дж/кг; Cp,Cv в Дж/(кг·К); sigma в См/м; eta в Па·с; lambda в Вт/(м·К).")
+            keys=("model","T_h_K","T_e_K","gamma_Te_Th","u_J_kg","h_J_kg","cp_J_kg_K","cv_J_kg_K","sigma_S_m","eta_Pa_s","lambda_W_m_K","properties_status")
+            print(" | ".join(keys))
+            for row in properties.rows:
+                print(" | ".join(f"{row[k]:.6e}" if isinstance(row[k],float) else str(row[k]) or "—" for k in keys))
+            print(f"Свойства и отдельные эталоны: {properties.csv_path}")
         print(f"\nCSV: {csv_path}")
         print(f"Графики: {Path(settings.output_dir) / 'plots'}")
         for solution in solutions:
             if not solution.converged:
                 print(f"Не сошлось: {solution.element}, {solution.mode}, "
                       f"T_h={solution.temperature_k:g} K, gamma={solution.temperature_ratio:g}: {solution.message}")
-    return RunSummary(tuple(solutions), validation, csv_path, tuple(plots), metadata)
+    return RunSummary(tuple(solutions), validation, csv_path, tuple(plots), metadata,
+                      properties.csv_path if properties else None, properties.failed_points if properties else 0)

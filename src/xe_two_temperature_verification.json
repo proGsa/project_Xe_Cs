@@ -1,0 +1,187 @@
+{
+  "version": "0.5.0",
+  "date": "2026-11-27",
+  "sweeps": [
+    {
+      "gamma": null,
+      "folder": "results_xe_properties",
+      "points": 218,
+      "statuses": {
+        "ok": 218
+      },
+      "Th_range_K": [
+        3000.0,
+        30000.0
+      ],
+      "Te_range_K": [
+        3000.0,
+        30000.0
+      ],
+      "maximum_heat_capacity_estimate": 4.557918031349828e-06,
+      "maximum_lambda_component_sum_error": 2.220446049250313e-16,
+      "coulomb_Tstar_range": [
+        0.51449702312902,
+        6367.232016123594
+      ]
+    },
+    {
+      "gamma": 1.0,
+      "folder": "results_xe_ideal_gamma_1",
+      "points": 109,
+      "statuses": {
+        "ok": 109
+      },
+      "Th_range_K": [
+        3000.0,
+        30000.0
+      ],
+      "Te_range_K": [
+        3000.0,
+        30000.0
+      ],
+      "maximum_heat_capacity_estimate": 4.557918031349828e-06,
+      "maximum_lambda_component_sum_error": 2.220446049250313e-16,
+      "coulomb_Tstar_range": [
+        0.5247138672973759,
+        6367.232016123594
+      ]
+    },
+    {
+      "gamma": 1.25,
+      "folder": "results_xe_ideal_gamma_1.25",
+      "points": 85,
+      "statuses": {
+        "ok": 85
+      },
+      "Th_range_K": [
+        3000.0,
+        24000.0
+      ],
+      "Te_range_K": [
+        3750.0,
+        30000.0
+      ],
+      "maximum_heat_capacity_estimate": 0.00045314550733251455,
+      "maximum_lambda_component_sum_error": 3.3306690738754696e-16,
+      "coulomb_Tstar_range": [
+        0.37486641316371494,
+        737.7919325093449
+      ]
+    },
+    {
+      "gamma": 1.5,
+      "folder": "results_xe_ideal_gamma_1.5",
+      "points": 69,
+      "statuses": {
+        "ok": 69
+      },
+      "Th_range_K": [
+        3000.0,
+        20000.0
+      ],
+      "Te_range_K": [
+        4500.0,
+        30000.0
+      ],
+      "maximum_heat_capacity_estimate": 5.155504350418618e-05,
+      "maximum_lambda_component_sum_error": 2.220446049250313e-16,
+      "coulomb_Tstar_range": [
+        0.28394647660206357,
+        179.4693963339037
+      ]
+    },
+    {
+      "gamma": 2.0,
+      "folder": "results_xe_ideal_gamma_2",
+      "points": 49,
+      "statuses": {
+        "ok": 49
+      },
+      "Th_range_K": [
+        3000.0,
+        15000.0
+      ],
+      "Te_range_K": [
+        6000.0,
+        30000.0
+      ],
+      "maximum_heat_capacity_estimate": 5.172340573044613e-05,
+      "maximum_lambda_component_sum_error": 2.220446049250313e-16,
+      "coulomb_Tstar_range": [
+        0.18255560343567606,
+        31.890691343178005
+      ]
+    }
+  ],
+  "v0.4.0_LTE_regression": {
+    "points": 218,
+    "maximum_relative_difference": 0.0,
+    "by_column": {
+      "T_h_K": 0.0,
+      "T_e_K": 0.0,
+      "gamma_Te_Th": 0.0,
+      "p_Pa": 0.0,
+      "max_charge": 0.0,
+      "n_e_m3": 0.0,
+      "n_0_m3": 0.0,
+      "n_1_m3": 0.0,
+      "n_2_m3": 0.0,
+      "n_3_m3": 0.0,
+      "n_4_m3": 0.0,
+      "rho_kg_m3": 0.0,
+      "u_J_kg": 0.0,
+      "h_J_kg": 0.0,
+      "cp_J_kg_K": 0.0,
+      "cv_J_kg_K": 0.0,
+      "sigma_S_m": 0.0,
+      "eta_Pa_s": 0.0,
+      "lambda_W_m_K": 0.0,
+      "lambda_e_W_m_K": 0.0,
+      "lambda_h_W_m_K": 0.0,
+      "lambda_reaction_W_m_K": 0.0,
+      "lambda_internal_W_m_K": 0.0,
+      "debye_length_m": 0.0,
+      "internal_energy_J_m3": 0.0,
+      "eos_pressure_Pa": 0.0,
+      "pressure_excess_Pa": 0.0,
+      "internal_energy_excess_J_m3": 0.0,
+      "free_energy_excess_J_m3": 0.0,
+      "heat_capacity_relative_estimate": 0.0,
+      "reference_rho_kg_m3": 0.0,
+      "reference_u_J_kg": 0.0,
+      "reference_h_J_kg": 0.0,
+      "reference_cp_J_kg_K": 0.0,
+      "reference_sigma_S_m": 0.0,
+      "reference_eta_Pa_s": 0.0,
+      "reference_lambda_W_m_K": 0.0,
+      "reference_cv_J_kg_K": 0.0,
+      "u_J_kg_relative_difference": 0.0,
+      "h_J_kg_relative_difference": 0.0,
+      "cp_J_kg_K_relative_difference": 0.0,
+      "sigma_S_m_relative_difference": 0.0,
+      "eta_Pa_s_relative_difference": 0.0,
+      "lambda_W_m_K_relative_difference": 0.0
+    }
+  },
+  "tests": {
+    "passed": 81,
+    "command": "uv run --locked python -m unittest discover -s tests -v",
+    "independent_cv_path": "constant density via a scalar pressure root; gamma=0.8 and 2",
+    "reactive_closure": "unscaled matrix comparison, LTE limit, trace fractions to 1e-250"
+  },
+  "uv_checks": [
+    "uv lock --check --offline: passed",
+    "uv sync --locked: passed"
+  ],
+  "domain_failure_check": {
+    "gamma": 5,
+    "Th_K": 4000,
+    "status": "outside_collision_domain",
+    "pair": "Xe4+–Xe4+",
+    "reason": "Tstar=0.09130112 < 0.1",
+    "cli_exit": 1,
+    "caloric_and_composition_values_preserved": true,
+    "all_plots_rendered": true
+  },
+  "figure_review": "Gamma 2 properties and weighted lambda components checked visually."
+}
